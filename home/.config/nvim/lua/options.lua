@@ -8,7 +8,7 @@ o.relativenumber = true
 -- show ~ at end-of-buffer (NvChad hides it with a space by default)
 o.fillchars = { eob = "~" }
 
--- auto-reload buffers when files change on disk (e.g. external edits from claude code)
+-- auto-reload buffers when files change on disk
 o.autoread = true
 
 -- prompt on quit/switch with unsaved changes instead of erroring

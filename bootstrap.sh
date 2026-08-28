@@ -73,7 +73,7 @@ Done. Next steps:
   - Open nvim; lazy.nvim will auto-install plugins on first launch.
 
 Prerequisites (install separately, not carried by dotfiles):
-  oh-my-zsh, fzf, mise, and any language toolchains (node/fnm, pnpm, bun, go).
+  oh-my-zsh, fzf, and mise. Run `mise install` for the pinned toolchain.
 
 The shell configuration discovers optional tools and platform-specific paths at
 runtime. ~/.gitconfig uses a personal identity; in work repos set a local override:

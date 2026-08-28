@@ -1,5 +1,5 @@
 /**
- * Custom footer (Claude-Code-style status line):
+ * Custom status footer:
  *
  *   Opus 5 - medium | $5.28, [██░░░░░░░░░░░░░░] 113k/1000k (11%) | ⎇ main (+177,-26)
  *     ~/dotfiles

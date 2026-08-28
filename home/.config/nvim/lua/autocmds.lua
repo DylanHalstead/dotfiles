@@ -10,7 +10,7 @@ autocmd("VimEnter", {
 })
 
 -- check for external file changes more aggressively so buffers reload
--- when tools like claude code edit them on disk
+-- when external tools edit them on disk
 autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
   group = vim.api.nvim_create_augroup("AutoReloadFiles", { clear = true }),
   callback = function()

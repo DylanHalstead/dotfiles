@@ -1,7 +1,7 @@
 # Generated package-manager state
 .pnpm-store/
 
-# Claude Code machine-local settings
+# Machine-local assistant settings
 **/.claude/settings.local.json
 
 # Secrets — gh stores the OAuth token here

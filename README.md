@@ -38,8 +38,21 @@ mise install
 
 Pi provides `/brainstorm`, `/plan`, `/implement`, `/review`, and `/refactor`
 workflows backed by markdown artifacts. `Alt+Shift+B/P/I/R/F` pre-fill those
-commands. Its permission policy protects credentials and destructive Git
-operations while allowing normal development commands.
+commands.
+
+Pi uses a trusted-development permission model. Routine tools, test suites, Git
+hooks, local services, and authenticated cloud CLIs run directly on the host.
+The OS sandbox is installed but disabled by default for compatibility. Hard
+denies cover direct credential access and catastrophic host commands, while Git
+pushes and Terraform mutations require confirmation even in YOLO mode. Cloud
+CLIs may expose short-lived session credentials to their child processes, so
+cloud access should use scoped development identities rather than long-lived or
+production credentials.
+
+The permission files remain separate because each has one owner:
+`pi-permissions.jsonc` configures the permission package,
+`sandbox/default.json` configures OS isolation, `guardrails.ts` enforces rules
+that survive YOLO, and `yolo.ts` manages session controls and status.
 
 Pi accounts share configuration but keep credentials separate:
 

@@ -9,10 +9,10 @@
  * ask "allow this?" (permission state `ask`) is auto-approved. Explicitly
  * *denied* rules still block.
  *
- * This is layer 2 of three. The OS-level sandbox (pi-sandbox) still contains
- * the process, and `guardrails.ts` still holds the two rules that must survive
- * auto-approve — secrets stay unreadable, and `git push` always asks. YOLO
- * only flips the permission package's switch; it opens nothing below it.
+ * The trusted-development policy already allows routine work. This switch is
+ * retained for sessions that also want to auto-approve the remaining permission
+ * prompts. `guardrails.ts` still blocks secrets and confirms pushes and cloud
+ * mutations independently, and an explicitly enabled sandbox still applies.
  *
  *   /yolo          Toggle YOLO for this session (press again to turn off)
  *   /yolo on|off   Set it explicitly

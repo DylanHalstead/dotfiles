@@ -15,9 +15,10 @@
  *
  *   - Secrets are unreadable. Blocks `read` and `bash` that touch credential
  *     files, with a reason that names the alternative (defense in depth with
- *     the sandbox's `denyRead` — this one also covers in-process tool calls
+ *     the sandbox's `denyRead` when sandboxing is enabled — this also covers in-process tool calls
  *     and workspace-local `.env` files that live inside an allowed path).
- *   - `git push` always asks, in every form; `--force` is refused outright.
+ *   - `git push` always asks, with a stronger warning for force pushes.
+ *   - Cloud mutations always ask; credential-printing commands are blocked.
  *
  * Pattern follows pi's bundled `examples/extensions/protected-paths.ts` and
  * `confirm-destructive.ts`.
@@ -70,6 +71,16 @@ function isForcePush(command: string): boolean {
 	return /(^|\s)(--force(-with-lease)?(=\S*)?|-f)(\s|$)/.test(command);
 }
 
+/** Cloud operations whose effects require consent even when YOLO is active. */
+function isCloudMutation(command: string): boolean {
+	return /(^|(?:&&|\|\||[;|\n])\s*)(terraform\s+(apply|import)|terraform\s+state\s+(rm|mv))(?![\w-])/.test(command);
+}
+
+/** Commands that deliberately print a reusable cloud session credential. */
+function printsCloudCredential(command: string): boolean {
+	return /(^|(?:&&|\|\||[;|\n])\s*)gcloud\s+auth\s+(application-default\s+)?print-access-token(?![\w-])/.test(command);
+}
+
 export default function guardrailsExtension(pi: ExtensionAPI): void {
 	pi.on("tool_call", async (event, ctx) => {
 		// --- secrets: never readable, whichever tool asks -------------------
@@ -90,26 +101,28 @@ export default function guardrailsExtension(pi: ExtensionAPI): void {
 			return { block: true, reason: SECRETS_REASON };
 		}
 
-		// --- pushes: force refused, everything else confirmed ---------------
-		if (!isGitPush(command)) return undefined;
-
-		if (isForcePush(command)) {
-			if (ctx.hasUI) ctx.ui.notify("Force push refused", "error");
-			return {
-				block: true,
-				reason: "Force pushing is not allowed. Push normally, or ask the user to force push themselves.",
-			};
+		if (printsCloudCredential(command)) {
+			return { block: true, reason: "Printing cloud access tokens is not allowed. Run the authenticated CLI operation directly." };
 		}
+
+		const gitPush = isGitPush(command);
+		const cloudMutation = isCloudMutation(command);
+		if (!gitPush && !cloudMutation) return undefined;
 
 		// Without a UI there is nobody to consent, so the safe answer is no.
 		if (!ctx.hasUI) {
-			return { block: true, reason: "git push needs interactive confirmation; none available here." };
+			return { block: true, reason: `${gitPush ? "git push" : "Cloud mutation"} needs interactive confirmation; none available here.` };
 		}
 
-		const approved = await ctx.ui.confirm("Push to remote?", command);
+		const title = gitPush
+			? isForcePush(command)
+				? "Force push to remote?"
+				: "Push to remote?"
+			: "Run cloud mutation?";
+		const approved = await ctx.ui.confirm(title, command);
 		if (!approved) {
-			ctx.ui.notify("Push cancelled", "info");
-			return { block: true, reason: "The user declined the push." };
+			ctx.ui.notify(`${gitPush ? "Push" : "Cloud mutation"} cancelled`, "info");
+			return { block: true, reason: `The user declined the ${gitPush ? "push" : "cloud mutation"}.` };
 		}
 
 		return undefined;

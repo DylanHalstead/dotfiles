@@ -1,0 +1,28 @@
+# Generated package-manager state
+.pnpm-store/
+
+# Claude Code machine-local settings
+**/.claude/settings.local.json
+
+# Secrets — gh stores the OAuth token here
+home/.config/gh/hosts.yml
+
+# TPM-managed tmux plugins (reinstalled via `prefix + I`)
+home/.config/tmux/plugins/
+
+# pi harness — credentials, machine state, and package installs.
+# Only settings.json and pi-permissions.jsonc are tracked; everything else
+# under ~/.pi is per-machine and must never be committed.
+home/.pi/agent/auth.json
+home/.pi/agent/trust.json
+home/.pi/agent/models-store.json
+home/.pi/agent/sessions/
+home/.pi/agent/bin/
+home/.pi/agent/npm/
+home/.pi/agent/sandbox/projects.json
+home/.pi/agent/extensions/*/config.json
+home/.pi/agent/extensions/*/logs/
+home/.pi/web-search.json
+home/.pi/config/
+# Per-machine profile dirs (symlinks + per-profile auth.json). profiles.sh is tracked.
+home/.pi/profiles/

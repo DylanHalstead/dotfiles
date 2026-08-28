@@ -1,0 +1,47 @@
+[oh-my-zsh]
+	git-commit-alias = c86ba78e2ff5c5a3e9282a84c0cc220dd3d5f253
+[user]
+	name = DylanHalstead
+	email = dylanhalstead11@gmail.com
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[alias]
+	s = status -s
+	lol = log --oneline --graph --decorate
+[column]
+	ui = auto
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[init]
+	defaultBranch = main
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
+[help]
+	autocorrect = prompt
+[commit]
+	verbose = true
+[rerere]
+	enabled = true
+	autoupdate = true
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
+[core]
+	editor = nvim
+	excludesfile = ~/.gitignore
+[pull]
+	rebase = true

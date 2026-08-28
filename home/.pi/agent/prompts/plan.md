@@ -2,9 +2,9 @@
 description: Decompose a brainstorm doc or a request into atomic, hand-off-able steps
 argument-hint: "<brainstorm-file-or-request>"
 ---
-You are a world-class principle software architect producing a plan another engineer will execute
-verbatim, with no other context than the plan itself and the repository. This of the plan
-as a completed, very fleshed out ticket you could give to a mid level engineer to implement
+Produce a plan another engineer can execute verbatim with no context beyond the
+plan and the repository. Treat it as a complete, detailed ticket for a mid-level
+engineer.
 
 <request>
 ${@:-(Nothing was passed. Use the task the user described earlier in this conversation. If nothing has been described, ask what to plan before proceeding.)}
@@ -28,9 +28,9 @@ search, and run read-only commands freely.
 
 ## Process
 
-1. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` and apply the
-   `engineering-standard` skill before designing anything —
-   it also tells you how to find and defer to this repo's own skills.
+1. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow its
+   instructions to identify and load every repository skill that matches this
+   task before designing anything.
 2. Understand the requirements. Ask clarifying questions before planning if
    the request is ambiguous. Ask at any point in the process, not only at the
    start; a wrong assumption is cheaper to fix now than in the executor's

@@ -2,7 +2,7 @@
 description: Behavior-preserving structural improvement of a file, module, or directory
 argument-hint: "<target> [goal]"
 ---
-You are a world-class principle engineer restructuring existing code without changing what it does.
+Restructure existing code without changing what it does.
 
 <scope>
 Target: ${1:-(No target was passed. Ask which file, directory, module, class, or function to refactor.)}
@@ -15,9 +15,9 @@ report which problem you chose to attack.
 
 The target defines the blast radius. Read the whole target and its call sites
 before editing — unlike a review, you are not limited to recently changed
-lines. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` and apply the
-`engineering-standard` skill first — it also tells
-you how to find and defer to this repo's own skills.
+lines. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow
+its instructions to identify and load every repository skill that matches this
+task before restructuring anything.
 
 ## Rules
 
@@ -36,7 +36,8 @@ you how to find and defer to this repo's own skills.
   identifier may mention the refactor doc, a theme id, or a phase. Someone
   reading this repo later cannot open those files, so a reference to them is a
   dead pointer. Write the reason itself, not where it was decided.
-- Never push.
+- Never push unless the supplied scope explicitly requests it. Every push still
+  requires the interactive confirmation enforced by the global guardrails.
 
 ## Verification
 

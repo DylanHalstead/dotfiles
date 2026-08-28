@@ -2,30 +2,30 @@
 description: Review a branch diff, path, or module in a find-then-verify pass
 argument-hint: "[target]"
 ---
-You are a world-class principle engineer reviewing code. Your deliverable is a set of findings
-that survive adversarial re-examination — not a list of everything you noticed.
+Review code and produce findings that survive adversarial re-examination — not
+a list of everything you noticed.
 
 <scope>
 Target: ${@:-this branch's changes vs the default branch}
 </scope>
 
-Establish the scope before reviewing:
+Establish the scope and review kind before reviewing:
 
-- **No target given** — review this branch's changes. First use `gh` to inspect
-  the upstream PR, if one exists: read its description for change intent and
-  use its base branch for the range. Otherwise find the default branch
-  (`git symbolic-ref refs/remotes/origin/HEAD`, falling back to `main` then
-  `master`). Work from `git diff <merge-base>...HEAD`. Report which range you
-  used.
-- **A path** — review that file, directory, or module in full, including its
-  call sites. You are not limited to recently changed lines.
-- **A plan file** (a path under `.pi/plan/`) — read it, review the branch
-  changes it produced, and add one question to the pass: did the change
-  deliver what the plan specified? A step checked off that did not fully land
-  is a finding.
-- **The repository** — do not try to read everything. Start from entry points,
-  module boundaries, and the highest-traffic paths, then follow the evidence.
-  Say what you sampled and what you deliberately skipped.
+- **No target given — change review.** Review this branch's changes. First use
+  `gh` to inspect the upstream PR, if one exists: read its description for
+  change intent and use its base branch for the range. Otherwise find the
+  default branch (`git symbolic-ref refs/remotes/origin/HEAD`, falling back to
+  `main` then `master`). Work from `git diff <merge-base>...HEAD`. Report which
+  range you used.
+- **A path — static audit.** Review that file, directory, or module in full,
+  including its call sites. You are not limited to recently changed lines.
+- **A plan file — change review.** For a path under `.pi/plan/`, read it, review
+  the branch changes it produced, and add one question to the pass: did the
+  change deliver what the plan specified? A checked step that did not fully
+  land is a finding.
+- **The repository — static audit.** Do not try to read everything. Start from
+  entry points, module boundaries, and the highest-traffic paths, then follow
+  the evidence. Say what you sampled and what you deliberately skipped.
 
 ## Discipline
 
@@ -35,17 +35,18 @@ files, or commit anything. The only file you write is the review artifact
 described under Output. Running the existing tests and type-checker is
 encouraged.
 
-Read `~/.pi/agent/skills/engineering-standard/SKILL.md` and apply the
-`engineering-standard` skill before judging anything — it
-also tells you how to find and defer to this repo's own skills. Repo skills
-matter most here: a repo that ships its own review skill has already decided
-what its reviews are about, and that decision outranks this checklist.
+Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow its
+instructions to identify and load every repository skill that matches this task
+before judging anything. Repository skills matter most here: a repository that
+ships its own review skill has already decided what its reviews are about, and
+that decision outranks this checklist.
 
 ## Pass 1 — find
 
-Scan every hunk line by line. For each one, read the enclosing function, not
-just the changed lines: a change is often correct in isolation and wrong in its
-context, and bugs in untouched lines of touched code are in scope.
+For a change review, scan every hunk line by line and read each enclosing
+function: a change is often correct in isolation and wrong in context. Bugs in
+untouched lines of touched code are in scope. For a static audit, inspect the
+selected code and its callers against the same checklist; do not invent a diff.
 
 Probe each line against this checklist, and say what you are checking for
 rather than skimming for a general feeling of wrongness:
@@ -96,7 +97,7 @@ skills: <repo skills you loaded, or "none">
 # Review — <target> — <date>
 
 ## Verdict
-`approve` | `approve-with-comments` | `request-changes` — one line of rationale.
+`pass` | `pass-with-findings` | `needs-work` — one line of rationale.
 
 ## Findings
 ### `<file>:<line>` — CONFIRMED | PLAUSIBLE

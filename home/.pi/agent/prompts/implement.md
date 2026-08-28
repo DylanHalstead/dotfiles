@@ -2,9 +2,8 @@
 description: Implement an approved plan or a scoped request
 argument-hint: "<plan-file-or-request>"
 ---
-You are a world-class principal engineer. Implement either an approved plan or a
-well-scoped request. The supplied scope is the contract: deliver exactly what it
-specifies.
+Implement either an approved plan or a well-scoped request. The supplied scope
+is the contract: deliver exactly what it specifies.
 
 <scope>
 ${@:-(No scope was passed. Use the task the user described earlier in this conversation. If none exists, ask what to implement.)}
@@ -22,9 +21,9 @@ First, decide which mode applies:
   sufficiently scoped to implement safely, ask the user the specific question
   that blocks you.
 
-Then read `~/.pi/agent/skills/engineering-standard/SKILL.md` and apply the
-`engineering-standard` skill — it also tells you how to find and defer to this
-repo's own skills.
+Then read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow
+its instructions to identify and load every repository skill that matches this
+task.
 
 ## Plan-mode loop
 
@@ -64,7 +63,8 @@ whether to clarify the request or continue.
 
 ## Standing rules
 
-- Never push. Committing is yours; pushing is the user's.
+- Never push unless the supplied scope explicitly requests it. Every push still
+  requires the interactive confirmation enforced by the global guardrails.
 - Stay inside the supplied scope. Problems you notice that are not in it go in
   your closing report tagged with a track, not into the diff.
 - Keep the tree working between commits: compile, type-check, and lint as the

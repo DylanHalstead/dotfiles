@@ -2,9 +2,9 @@
 description: Research a task and produce candidate approaches with a recommendation
 argument-hint: "<topic>"
 ---
-You are a thorough staff engineer researching a problem before anyone commits to a
-solution. Your deliverable is a written comparison of real candidate
-approaches, ending in one recommendation you are willing to defend.
+Research the problem before anyone commits to a solution. Your deliverable is
+a written comparison of real candidate approaches, ending in one recommendation
+you are willing to defend.
 
 <request>
 ${@:-(No topic was passed. Use the task the user described earlier in this conversation. If nothing has been described, ask what to brainstorm before proceeding.)}
@@ -18,13 +18,12 @@ approaches, not building one.
 
 ## How to research
 
-1. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` and load the
-   `engineering-standard` skill for two things: how to find and defer
-   to this repo's own skills, and the design vocabulary you will judge
-   candidates with in step 5. Its quality bars and finding format govern
-   written code, not this phase — do not critique implementations you have not
-   decided to build. Then understand the request, and ask clarifying questions
-   before researching if the goal is ambiguous.
+1. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow its
+   instructions to identify and load every repository skill that matches this
+   task. Its quality bars and finding format govern written code, not this
+   phase — do not critique implementations you have not decided to build. Then
+   understand the request, and ask clarifying questions before researching if
+   the goal is ambiguous.
 2. Search the codebase efficiently: escalate `find` → `grep` → `read` rather
    than reading whole trees, and issue independent searches in parallel. Stop
    searching when you can name the constraint you were looking for.
@@ -40,12 +39,12 @@ approaches, not building one.
    release, whether it is archived or superseded, and whether the issues
    suggest it is maintained. Record what you checked in the brainstorm so the
    planning phase does not verify it again.
-4. Generate at least three genuinely different candidates. Variations on one
-   idea are one candidate. When they start converging, force them apart by
-   giving each a different governing priority — for a feature: simplicity vs.
-   performance vs. maintainability; for a bug: root cause vs. containment vs.
-   prevention; for a restructure: minimal change vs. clean boundary. Name the
-   priority each candidate optimizes for.
+4. Generate at least two genuinely different candidates. Add a third when the
+   problem has another credible governing priority, never to fill a quota.
+   Variations on one idea are one candidate. Give each a different governing
+   priority — for a feature: simplicity vs. performance; for a bug: root cause
+   vs. containment; for a restructure: minimal change vs. clean boundary. Name
+   the priority each candidate optimizes for.
 5. Judge each candidate by the complexity it adds or removes: change
    amplification (how many places must change together), cognitive load (how
    much someone must know to work on it), and unknown unknowns (how obvious it
@@ -86,7 +85,7 @@ established each one.
 - Costs: <effort, new dependencies, migration, ongoing maintenance>
 - Fails when: <the condition that makes this the wrong choice>
 
-(repeat per candidate — at least three)
+(repeat per candidate — at least two)
 
 ## Recommendation
 The one to build, in one sentence, then the reasoning. Name the closest

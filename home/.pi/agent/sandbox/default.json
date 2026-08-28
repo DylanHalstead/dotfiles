@@ -1,0 +1,109 @@
+{
+  "enabled": true,
+  "network": {
+    "allowedDomains": [
+      "github.com",
+      "*.github.com",
+      "*.githubusercontent.com",
+      "proxy.golang.org",
+      "sum.golang.org",
+      "storage.googleapis.com",
+      "*.googleapis.com",
+      "accounts.google.com",
+      "oauth2.googleapis.com",
+      "*.amazonaws.com",
+      "*.aws.amazon.com",
+      "registry.npmjs.org",
+      "*.npmjs.com",
+      "npm.pkg.github.com",
+      "registry.yarnpkg.com",
+      "registry.terraform.io",
+      "releases.hashicorp.com",
+      "checkpoint.hashicorp.com",
+      "tuf-repo-cdn.sigstore.dev",
+      "localhost",
+      "127.0.0.1",
+      "api.localstack.cloud"
+    ],
+    "deniedDomains": [],
+    "allowLocalBinding": true,
+    "allowMachLookup": [
+      "org.chromium.Chromium.*"
+    ],
+    "allowUnixSockets": [
+      "/tmp",
+      "/private/tmp",
+      "/var/run/com.apple.launchd",
+      "~/.docker/run",
+      "/var/run/docker.sock"
+    ]
+  },
+  "filesystem": {
+    "denyRead": [
+      "/Users",
+      "/home",
+      "~/.aws/credentials",
+      "~/.config/gh/token",
+      "~/.ssh/id_*",
+      "~/.zsh_secrets"
+    ],
+    "allowRead": [
+      ".",
+      "./**/.terraform",
+      "~/repos",
+      "~/.pi",
+      "~/.terraform.d",
+      "~/.tflint.d",
+      "~/Library/Application Support/go",
+      "~/Library/Caches/go-build",
+      "~/Library/Caches/ms-playwright",
+      "~/Library/Caches/plux",
+      "~/Library/Caches/localstack*",
+      "~/Library/Caches/localstack",
+      "~/.cache/localstack*",
+      "~/.localstack",
+      "~/.docker",
+      "/tmp",
+      "~/.local/share/mise",
+      "~/.local/bin",
+      "~/.local/lib",
+      "~/.config",
+      "~/.aws",
+      "~/.bun",
+      "~/.cargo",
+      "~/.npmrc",
+      "~/.gitconfig",
+      "~/.gitignore",
+      "~/go",
+      "~/.ssh/known_hosts",
+      "~/.ssh/config",
+      "~/google-cloud-sdk",
+      "~/bin",
+      "/opt/homebrew/Cellar/pi-coding-agent/*/libexec/lib/node_modules/@earendil-works/pi-coding-agent/docs/**",
+      "/home/linuxbrew/.linuxbrew/Cellar/pi-coding-agent/*/libexec/lib/node_modules/@earendil-works/pi-coding-agent/docs/**"
+    ],
+    "allowWrite": [
+      ".",
+      "./**/.terraform",
+      "~/go",
+      "~/.tflint.d",
+      "/tmp",
+      "/private/tmp",
+      "/var/folders",
+      "~/Library/Application Support/go",
+      "~/Library/Caches/go-build",
+      "~/Library/Caches/plux",
+      "~/Library/Caches/localstack*",
+      "~/Library/Caches/localstack",
+      "~/.cache/localstack*",
+      "~/.localstack",
+      "~/repos/*"
+    ],
+    "denyWrite": [
+      "~/.pi/agent/auth.json",
+      "~/.pi/agent/mcp-oauth",
+      "~/.ssh/id_ed25519",
+      "~/.ssh/id_ed25519.pub"
+    ]
+  }
+}

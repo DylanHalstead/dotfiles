@@ -1,0 +1,307 @@
+// Global policy for pi-permission-system.
+//
+// States: "allow" (silent), "ask" (confirm in TUI), "deny" (hard block, cannot
+// be relaxed by project-local policy or a session approval).
+//
+// ── HOW MATCHING WORKS (verified against src/wildcard-matcher.ts) ───────────
+//
+//  1. Patterns are globs, NOT shell parsing. Only `*` and `?` are special;
+//     everything else is literal. The pattern is anchored `^...$` and compiled
+//     with the dotall flag, so `*` also matches newlines.
+//
+//  2. LAST DECLARED MATCHING RULE WINS. The matcher walks the section's keys
+//     bottom-to-top and returns the first hit. Key order in this file is the
+//     precedence order — so each section below is laid out as:
+//         baseline  ->  allowlist  ->  chain guards  ->  hard denies
+//     Moving a rule changes its precedence. Append new allows *above* the
+//     chain-guard block, never below it.
+//
+//  3. A trailing `*` on an allow rule is an ARBITRARY COMMAND ESCAPE HATCH.
+//     Because nothing tokenises the command, `"git status *": "allow"` also
+//     matches `git status && rm -rf ~/repos`. The chain-guard block near the
+//     bottom of `bash` exists solely to close this: it re-captures any command
+//     containing a shell metacharacter (&& || ; | ` $( > < newline) and forces
+//     it back to "ask". Do not delete it, and do not add allow rules after it.
+//
+//  4. `"cmd *"` (space-star) compiles to `cmd( .*)?`, so it matches both bare
+//     `cmd` and `cmd --with-args`, but not `cmdfoo`. Prefer this form.
+//
+//  5. For the bash tool a matching `bash` pattern outranks `tools.bash`;
+//     `tools.bash` is only the fallback when no bash pattern matches.
+{
+  "defaultPolicy": {
+    "tools": "ask",
+    "bash": "ask",
+    "mcp": "ask",
+    "skills": "ask",
+    "special": "ask"
+  },
+
+  "tools": {
+    "*": "ask",
+    // Inspection is free — pi's own read/search tools are safer than shelling out.
+    "read": "allow",
+    "grep": "allow",
+    "find": "allow",
+    "ls": "allow",
+    // Mutations stay confirmed.
+    "write": "ask",
+    "edit": "ask"
+  },
+
+  "bash": {
+    // ── baseline ────────────────────────────────────────────────────────────
+    "*": "ask",
+
+    // ── git: read-only inspection ───────────────────────────────────────────
+    "git status *": "allow",
+    "git s": "allow", // alias: status -s
+    "git log *": "allow",
+    "git lol": "allow", // alias: log --oneline --graph --decorate
+    "git diff *": "allow",
+    "git show *": "allow",
+    "git blame *": "allow",
+    "git shortlog *": "allow",
+    "git describe *": "allow",
+    "git rev-parse *": "allow",
+    "git ls-files *": "allow",
+    "git branch": "allow",
+    "git branch -a": "allow",
+    "git branch -v": "allow",
+    "git branch --list *": "allow",
+    "git tag -l *": "allow",
+    "git remote -v": "allow",
+    "git stash list": "allow",
+    "git worktree list": "allow",
+    "git config --get *": "allow",
+    "git config --list": "allow",
+    "git fetch": "allow",
+    "git fetch --all": "allow",
+    "git fetch --prune": "allow",
+
+    // ── gh: read-only ───────────────────────────────────────────────────────
+    // `gh api` is omitted on purpose — it can POST/DELETE.
+    "gh pr view *": "allow",
+    "gh pr list *": "allow",
+    "gh pr diff *": "allow",
+    "gh pr checks *": "allow",
+    "gh pr status": "allow",
+    "gh issue view *": "allow",
+    "gh issue list *": "allow",
+    "gh run list *": "allow",
+    "gh run view *": "allow",
+    "gh repo view *": "allow",
+
+    // ── node / pnpm / bun / turbo ───────────────────────────────────────────
+    // `pnpm install` is NOT allowlisted: lifecycle scripts execute arbitrary
+    // code, even with --frozen-lockfile.
+    "pnpm lint": "allow",
+    "pnpm lint:fix": "allow",
+    "pnpm format": "allow",
+    "pnpm format:check": "allow",
+    "pnpm typecheck": "allow",
+    "pnpm test": "allow",
+    "pnpm build": "allow",
+    "pnpm verify": "allow",
+    "pnpm verify:affected": "allow",
+    "pnpm audit *": "allow",
+    "npm audit *": "allow",
+    "turbo run lint *": "allow",
+    "turbo run format:check *": "allow",
+    "turbo run typecheck *": "allow",
+    "turbo run test *": "allow",
+    "turbo run build *": "allow",
+    "npx tsc *": "allow",
+    "tsc *": "allow",
+    "tsgo": "allow",
+    "oxlint *": "allow",
+    "oxfmt *": "allow",
+    "biome check *": "allow",
+    "eslint *": "allow",
+    "prettier *": "allow",
+    "bun test *": "allow",
+
+    // ── go ──────────────────────────────────────────────────────────────────
+    // `go run` and `go generate` are omitted — both execute arbitrary code.
+    "go build *": "allow",
+    "go test *": "allow",
+    "go vet *": "allow",
+    "go fmt *": "allow",
+    "go list *": "allow",
+    "go doc *": "allow",
+    "go env": "allow",
+    "go version": "allow",
+    "go mod tidy": "allow",
+    "go mod download": "allow",
+    "go mod verify": "allow",
+    "go tool cover *": "allow",
+    "gofmt *": "allow",
+    "goimports *": "allow",
+    "golangci-lint run *": "allow",
+
+    // ── ruby ────────────────────────────────────────────────────────────────
+    // Bare `rake *` is NOT allowlisted: nha-attom's Rakefile exposes production
+    // ETL tasks (resync_properties, delete_old_mls_listing_data, …). Only the
+    // task *listing* flag is safe.
+    "bundle exec rspec *": "allow",
+    "rspec *": "allow",
+    "bundle exec standardrb *": "allow",
+    "standardrb *": "allow",
+    "bundle exec rubocop *": "allow",
+    "bundle exec rake -T": "allow",
+    "rake -T": "allow",
+    "bundle check": "allow",
+    "bundle exec bundle-audit *": "allow",
+
+    // ── python ──────────────────────────────────────────────────────────────
+    "uv run --extra test pytest *": "allow",
+    "uv run pytest *": "allow",
+    "pytest *": "allow",
+    "uv run ruff check *": "allow",
+    "uv run ruff format *": "allow",
+    "ruff check *": "allow",
+    "ruff format *": "allow",
+    "uv sync *": "allow",
+    "uv lock": "allow",
+    "uv tree *": "allow",
+    "mypy *": "allow",
+    "pyright *": "allow",
+    "poe test-unit-tests": "allow",
+    "poe test-integration-tests": "allow",
+
+    // ── terraform / tflint ──────────────────────────────────────────────────
+    // `plan` is omitted (reads real cloud state with live credentials, and is
+    // slow) — it falls through to ask. apply/destroy/state-mutation are denied
+    // outright in the deny block below.
+    "terraform fmt *": "allow",
+    "terraform validate *": "allow",
+    "terraform providers *": "allow",
+    "terraform version": "allow",
+    "terraform output *": "allow",
+    "terraform show *": "allow",
+    "terraform graph *": "allow",
+    "terraform state list *": "allow",
+    "terraform state show *": "allow",
+    "terraform init -backend=false *": "allow",
+    "terraform init -lockfile=readonly *": "allow",
+    // Regenerates Terraform module README files without touching infrastructure.
+    "terraform-docs *": "allow",
+    "tflint *": "allow",
+
+    // ── make: named targets only ────────────────────────────────────────────
+    // Not `make *` — capcom's Makefile has `dev`, `db`, `wiremock` (start
+    // services) and `clean` (deletes files) alongside the safe targets.
+    "make build": "allow",
+    "make test": "allow",
+    "make test-fast": "allow",
+    "make test-slow": "allow",
+    "make test-compat": "allow",
+    "make lint": "allow",
+    "make fmt": "allow",
+    "make fmt-check": "allow",
+    "make vet": "allow",
+    "make tidy": "allow",
+    "make cover": "allow",
+    "make help": "allow",
+    "make -C * test": "allow",
+    "make -C * lint": "allow",
+    "make -C * fmt-check": "allow",
+    "make -C * vet": "allow",
+    "make -C * verify": "allow",
+
+    // ── general read-only shell ─────────────────────────────────────────────
+    // `find` and `fd` are deliberately absent: both can execute commands
+    // (`find -exec`, `fd -x`) with no shell metacharacter for the guard to
+    // catch. Use pi's built-in find/grep tools instead.
+    "ls *": "allow",
+    "pwd": "allow",
+    "cat *": "allow",
+    "head *": "allow",
+    "tail *": "allow",
+    "wc *": "allow",
+    "file *": "allow",
+    "stat *": "allow",
+    "tree *": "allow",
+    "du *": "allow",
+    "df *": "allow",
+    "rg *": "allow",
+    "grep *": "allow",
+    "jq *": "allow",
+    "yq *": "allow",
+    "which *": "allow",
+    "command -v *": "allow",
+    "docker ps *": "allow",
+    "docker images *": "allow",
+    "docker compose ps *": "allow",
+    "docker compose logs *": "allow",
+    "mise ls *": "allow",
+    "mise current *": "allow",
+    "mise doctor": "allow",
+
+    // ── chain guards ────────────────────────────────────────────────────────
+    // Everything below re-captures commands that an allow rule above would
+    // otherwise have matched greedily. NOTHING MAY BE ADDED BELOW THIS LINE
+    // except more restrictive rules.
+    "*&&*": "ask",
+    "*||*": "ask",
+    "*;*": "ask",
+    "*|*": "ask",
+    "*`*": "ask",
+    "*$(*": "ask",
+    "*>*": "ask",
+    "*<*": "ask",
+    "*\n*": "ask",
+    "*\r*": "ask",
+
+    // Reversible-but-lossy git operations: confirm even when chained.
+    "*git reset --hard*": "ask",
+    "*git clean -*": "ask",
+    "*git rebase*": "ask",
+    "*git cherry-pick*": "ask",
+
+    // ── hard denies ─────────────────────────────────────────────────────────
+    "*sudo *": "deny",
+    "*rm -rf /*": "deny",
+    "*rm -rf ~*": "deny",
+    "*rm -fr /*": "deny",
+    "*mkfs*": "deny",
+    "*dd if=*of=/dev/*": "deny",
+    "*chmod -R 777 /*": "deny",
+    "*git push --force*": "deny",
+    "*git push -f *": "deny",
+    "*terraform apply*": "ask",
+    "*terraform destroy*": "deny",
+    "*terraform state rm*": "deny",
+    "*terraform state mv*": "deny",
+    "*terraform import*": "deny",
+    "*curl * | sh*": "deny",
+    "*curl * | bash*": "deny",
+    "*wget * | sh*": "deny",
+    "*wget * | bash*": "deny"
+  },
+
+  "mcp": {
+    "*": "ask",
+    "mcp_status": "allow",
+    "mcp_list": "allow",
+    "mcp_search": "allow",
+    "mcp_describe": "allow"
+  },
+
+  "skills": {
+    "*": "ask"
+  },
+
+  "special": {
+    "doom_loop": "ask",
+    // Anything outside the active worktree needs a confirmation.
+    "external_directory": "ask",
+    "external_directory:~/repos/*": "allow",
+    "external_directory:~/dotfiles/*": "allow",
+    // pi global config and skills are always safe to read.
+    "external_directory:~/.pi/*": "allow",
+    // Wildcards cover package versions on macOS and Homebrew Linux.
+    "external_directory:/opt/homebrew/Cellar/pi-coding-agent/*": "allow",
+    "external_directory:/home/linuxbrew/.linuxbrew/Cellar/pi-coding-agent/*": "allow"
+  }
+}

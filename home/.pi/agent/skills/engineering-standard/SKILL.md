@@ -1,6 +1,6 @@
 ---
 name: engineering-standard
-description: The house standard for designing, writing, and critiquing code — convention precedence, A Philosophy of Software Design principles and red flags, the readable/idiomatic/performant/scalable quality bars, and the themed-findings report format. Load before planning a change, implementing one, reviewing a diff, or refactoring a module.
+description: Design, implement, review, and refactor code using the house engineering standard. Use for any task that plans a code change, writes or modifies code, reviews a diff, or evaluates or refactors a module. Covers convention precedence, complexity and deep-module design, domain modeling, readable/idiomatic/performant/scalable quality bars, and themed findings.
 ---
 
 # Engineering standard

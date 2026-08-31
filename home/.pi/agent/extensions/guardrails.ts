@@ -34,8 +34,9 @@ import { resolve } from "node:path";
  * raw bash command text, where no path-glob matcher applies.
  */
 const SECRET_PATTERNS: RegExp[] = [
-	// .env and .env.<anything>, but not the checked-in .env.example / .env.sample
-	/(^|[\s"'`=/])\.env(\.(?!example\b|sample\b|template\b)[\w.-]+)?(?=$|[\s"'`:,)])/,
+	// .env and .env.<anything>, except committed examples and LocalStack's
+	// developer-only configuration files.
+	/(^|[\s"'`=/])\.env(\.(?!example\b|sample\b|template\b|localstack(?:\.(?:params|secrets))?(?=$|[\s"'`:,)=]))[\w.-]+)?(?=$|[\s"'`:,)=])/,
 	/\.zsh_secrets\b/,
 	/\.ssh\//,
 	/\.gnupg\//,

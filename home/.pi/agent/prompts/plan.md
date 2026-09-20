@@ -2,9 +2,9 @@
 description: Decompose a brainstorm doc or a request into atomic, hand-off-able steps
 argument-hint: "<brainstorm-file-or-request>"
 ---
-Produce a plan another engineer can execute verbatim with no context beyond the
-plan and the repository. Treat it as a complete, detailed ticket for a mid-level
-engineer.
+Produce the smallest execution map a fresh engineer can follow using only the
+plan and repository. The source owns behavior and rationale; the plan owns
+sequencing, dependencies, affected surfaces, and verification.
 
 <request>
 ${@:-(Nothing was passed. Use the task the user described earlier in this conversation. If nothing has been described, ask what to plan before proceeding.)}
@@ -35,13 +35,18 @@ search, and run read-only commands freely.
    the request is ambiguous. Ask at any point in the process, not only at the
    start; a wrong assumption is cheaper to fix now than in the executor's
    session.
-3. Explore: read the affected files, extract the local conventions from 2-3
-   comparable implementations, and trace the code paths the change touches.
-4. Design it twice. Sketch a genuinely different second approach, then say why
-   you chose the one you chose. Prefer the design that removes the most
-   complexity, not the one that is fastest to write.
-5. Decompose into steps. Each step is **one atomic commit**: one reversible
-   intent, deliverable by an engineer with no other context.
+3. Explore: read the affected files, trace the code paths the change touches,
+   and inspect enough comparable code to establish the local conventions.
+4. Resolve material design choices. Compare another viable approach when one
+   exists. If constraints or prior research leave one approach, name what
+   eliminated the alternatives instead of manufacturing another design. Prefer
+   the option that removes the most complexity.
+5. Decompose into steps. Prefer narrow vertical slices that leave the repository
+   coherent over separate layer-by-layer tasks. For a wide migration that
+   cannot land as vertical slices, use expand-contract: add the new form,
+   migrate callers in safe batches, verify, then remove the old form. Each step
+   is **one atomic commit**: one reversible intent, deliverable by an engineer
+   with no other context.
 
 The atomicity test is the commit subject. Write it before the step: imperative
 mood, ≤50 characters, no "and". A step whose subject needs "and" is two steps.
@@ -66,17 +71,22 @@ skills: <repo skills you loaded, or "none">
 
 ## Context & goal
 One paragraph: what we are building and why. State the approach in one
-sentence so the executor never has to infer it.
+sentence so the executor never has to infer it. Link to source requirements
+instead of restating them when a source artifact exists.
 
 ## Chosen design
-The design, and the alternative you rejected with the reason you rejected it.
+The design and its material constraints. For each material choice, include the
+closest viable alternative and why it lost, or the evidence that eliminated
+other approaches.
 
 ## Steps
 - [ ] **1.** <what this step accomplishes>
       - Commit: `<imperative subject, ≤50 chars, no "and">`
-      - What: <files and functions, the concrete change — verbose enough to
-        hand off cold>
-      - Verify: <the command to run or the observation that proves it worked>
+      - What: <source criterion or behavior, affected files and functions, and
+        the concrete change — enough to execute cold without rewriting the
+        source>
+      - Verify: <the command or observation and the reachable behavior or
+        failure it proves>
       - Depends on: <step numbers, or "none">
 
 (repeat per step)
@@ -92,12 +102,13 @@ to run, the test suite that covers it, or the concrete thing to exercise and
 what correct looks like. Per-step Verify proves a step landed; this proves
 the feature works.
 
-## Anticipated challenges
-The parts most likely to go wrong, and what the executor should do about each.
+## Risks and decisions
+Only concrete risks that could change execution, and the evidence or decision
+that resolves each. Omit this section when there are none.
 
 ## Out of scope
-Problems found while exploring that are real but not part of this plan, each
-tagged with its track (brainstorm / implement / refactor) so nothing is lost.
+Relevant problems deliberately excluded from this plan, why they are excluded,
+and the next action if one is warranted.
 
 ## Not verified
 Assumptions you could not confirm, and what would confirm them.

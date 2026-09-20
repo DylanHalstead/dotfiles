@@ -1,6 +1,6 @@
 ---
 description: Review a branch diff, path, or module in a find-then-verify pass
-argument-hint: "[target]"
+argument-hint: "[--save] [target]"
 ---
 Review code and produce findings that survive adversarial re-examination — not
 a list of everything you noticed.
@@ -31,9 +31,9 @@ Establish the scope and review kind before reviewing:
 
 This is a read-only pass. Describe the fixes; do not apply them. Do not write
 or edit source files, use shell redirects or heredocs, create temp or scratch
-files, or commit anything. The only file you write is the review artifact
-described under Output. Running the existing tests and type-checker is
-encouraged.
+files, or commit anything. Write a review artifact only when the target
+contains `--save`; remove that marker before establishing scope. Running the
+existing tests and type-checker is encouraged.
 
 Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow its
 instructions to identify and load every repository skill that matches this task
@@ -74,16 +74,45 @@ each one and keep the evidence.
   what evidence would confirm or refute it.
 - **REFUTED** — quote the code that guards against it. Drop it.
 
-Only CONFIRMED and PLAUSIBLE findings reach the artifact, each with the
-evidence that earned its classification. This split is the point of the review:
-a finding you cannot substantiate costs the reader more than it saves.
+Only CONFIRMED and PLAUSIBLE candidates reach the synthesis pass. A candidate
+you cannot substantiate costs the author more than it saves.
+
+## Pass 3 — write the review
+
+Write findings as [Conventional Comments](https://conventionalcomments.org/).
+The internal certainty labels guide reasoning; do not expose them in the final
+review.
+
+Map candidates to comments:
+
+- A confirmed problem that must be fixed before merge becomes
+  `issue (blocking)`.
+- A confirmed problem that does not block merge becomes `issue`.
+- A plausible concern whose trigger or contract remains uncertain becomes a
+  `question`. State what would confirm or dismiss it.
+- An improvement with no demonstrated defect becomes
+  `suggestion (non-blocking)`.
+- A minor preference with practical value becomes `nitpick`. Omit formatter
+  output and taste with no concrete impact.
+- A refuted candidate is omitted.
+
+Comment on the code, not the author. Lead with the observed behavior or risk,
+then explain the trigger and impact. Explain why when it is not obvious. Give a
+concrete direction for a fix without requiring the exact implementation unless
+the contract leaves only one sound choice.
+
+After writing the comments, check whether several share one root cause. Merge
+them when one coordinated change would fix them. Otherwise, keep them separate.
+Do not manufacture a pattern or repeat findings under a second taxonomy.
 
 ## Output
 
-Write the review to `.pi/review/<slug>.md` (create the directory if needed),
-where `<slug>` is the upstream artifact's slug when reviewing from one, and
-otherwise the branch name or a short kebab-case name for the target. Structure
-it exactly like this:
+Present the review in the reply by default. When the target contains `--save`,
+write it to `.pi/review/<slug>.md` (create the directory if needed), where
+`<slug>` is the upstream artifact's slug when reviewing from one, and otherwise
+the branch name or a short kebab-case name for the target. Use the sections
+below in either destination. Include the YAML frontmatter only in a saved
+artifact:
 
 ```markdown
 ---
@@ -94,31 +123,45 @@ date: <YYYY-MM-DD>
 skills: <repo skills you loaded, or "none">
 ---
 
-# Review — <target> — <date>
+# Review: <target>
 
-## Verdict
-`pass` | `pass-with-findings` | `needs-work` — one line of rationale.
+**Verdict:** approve | comment | request changes
+
+<One or two sentences explaining the merge decision.>
 
 ## Findings
-### `<file>:<line>` — CONFIRMED | PLAUSIBLE
-[correctness | architecture | readability | performance | scalability | idiomatic]
-What is wrong and what it costs. For CONFIRMED, the triggering inputs and the
-resulting behavior. For PLAUSIBLE, what would settle it.
-Fix: the approach, not a diff.
 
-(repeat, most severe first)
+### `<file>:<line>`
 
-## Themes
-Systemic findings grouped in the theme format from the engineering standard,
-each with its track. A theme qualifies when the same decision recurs.
+**issue (blocking): <concise consequence or required change>**
 
-## Pre-existing
-Problems the change makes worse but did not introduce, marked as such.
+<Observed behavior, triggering state, and concrete impact.>
 
-## Not verified
-What you could not check — untested paths, code you did not read, behavior that
-depends on runtime state you could not trace.
+**Suggestion:** <a sound direction for the fix>
+
+### `<file>:<line>`
+
+**question: <the unresolved contract or behavior>**
+
+<Why the concern is credible and what evidence would settle it.>
+
+(repeat in merge-impact order; use the appropriate Conventional Comment label)
+
+## Systemic Pattern
+
+<Include only when at least two findings share one root cause and one
+coordinated change would address them. Cite representative locations.>
+
+## Not Verified
+
+<Untested paths, code not read, or behavior that depends on runtime state not
+traced.>
 ```
 
-Close your reply with the artifact path, the verdict, and the single most
-serious finding.
+Omit empty sections. Do not add praise to fill space. Mention good work only
+when it teaches a useful practice or affects the verdict. Mark a problem as
+pre-existing in its comment when the change makes it worse; do not create a
+separate inventory of unrelated debt.
+
+Close with the verdict and the single most serious finding. If you saved an
+artifact, include its path.

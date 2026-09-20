@@ -50,6 +50,11 @@ vim.lsp.config("ruby_lsp", {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
+  -- Run from the LSP root so Mise selects each project's Ruby version.
+  cmd = function(dispatchers, config)
+    local command = vim.fn.executable "mise" == 1 and { "mise", "exec", "--", "ruby-lsp" } or { "ruby-lsp" }
+    return vim.lsp.rpc.start(command, dispatchers, config and config.root_dir and { cwd = config.cmd_cwd or config.root_dir })
+  end,
   init_options = {
     formatter = "none", -- conform handles formatting via rubocop
     linters = { "rubocop" },

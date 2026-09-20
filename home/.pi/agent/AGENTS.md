@@ -6,8 +6,22 @@ Before writing new code, stop at the first rung that holds:
 (5) already-installed dependency → use it; (6) one line suffices → one line;
 (7) only then write the minimum that works.
 Minimalism applies to the solution, never to safety (keep validation, error
-handling, security, accessibility) and never to reading — understand the
+handling, security, accessibility) and never to reading. Understand the
 problem fully before choosing a rung.
+
+# Software design
+
+Apply John Ousterhout's *A Philosophy of Software Design* (APOSD) as the
+default lens across design, implementation, and review. Optimize for lower
+long-term complexity, measured as change amplification, cognitive load, and
+unknown unknowns.
+
+Prefer deep modules: simple interfaces that hide substantial implementation
+complexity. Keep each design decision in one place, pull complexity down into
+the module that owns it, and avoid layers that only forward calls. Design for
+reading and change, not for the shortest implementation. Load the
+`software-design-philosophy` skill when a task introduces or reshapes module
+boundaries, APIs, abstractions, or other material design decisions.
 
 # Scope discipline
 
@@ -27,14 +41,14 @@ noticed it is how a reviewable diff becomes an unreviewable one.
 # Commit messages
 
 Commits are scanned as one-line log output, so the subject must carry the
-whole message. Write subject-only commits — no body — following the
-subject rules from cbea.ms/git-commit. Use Conventional Commit prefixes
-only when a repo's own instructions require them.
+whole message. Write subject-only commits with no body, following the subject
+rules from cbea.ms/git-commit. Use Conventional Commit prefixes only when a
+repo's own instructions require them.
 
 1. Subject ≤ 50 characters
 2. Capitalize the subject line
 3. End the subject without a period
-4. Imperative mood — the subject completes "If applied, this commit will …"
+4. Imperative mood: the subject completes "If applied, this commit will …"
 
 One commit = one reversible intent. A subject that needs "and" means two
 commits.

@@ -1,5 +1,6 @@
 # Generated package-manager state
 .pnpm-store/
+.agents/skills/
 
 # Machine-local assistant settings
 **/.claude/settings.local.json

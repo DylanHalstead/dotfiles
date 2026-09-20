@@ -37,7 +37,17 @@ echo "==> Stowing configs into \$HOME ..."
 cd "$DOTFILES_DIR"
 stow -t "$HOME" -v home
 
-# --- 4. pi harness packages ---------------------------------------------------
+# --- 4. External agent skills -------------------------------------------------
+# skills-lock.json is the source of truth; generated copies stay untracked in
+# .agents/skills and are exposed globally through the stowed ~/.agents/skills.
+if command -v npx >/dev/null 2>&1; then
+  echo "==> Restoring agent skills from skills-lock.json ..."
+  (cd "$DOTFILES_DIR" && npx --yes skills@1.7.0 experimental_install)
+else
+  echo "==> npx not found, skipping agent skill restore."
+fi
+
+# --- 5. pi harness packages ---------------------------------------------------
 # settings.json (stowed above) already declares the package list; this just
 # materialises node_modules for them. Skipped when pi isn't installed.
 if command -v pi >/dev/null 2>&1; then
@@ -48,7 +58,7 @@ else
   echo "    Install with: brew install pi-coding-agent   (then re-run this script)"
 fi
 
-# --- 5. pi profiles (auth-only account isolation) ----------------------------
+# --- 6. pi profiles (auth-only account isolation) ----------------------------
 # Build thin per-account config dirs that share everything except auth.json.
 # The existing ~/.pi/agent/auth.json (if any) becomes the "work" profile.
 if [ -f "$HOME/.pi/profiles.sh" ]; then

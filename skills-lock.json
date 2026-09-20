@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "skills": {
+    "linear-cli": {
+      "source": "schpet/linear-cli",
+      "ref": "7486a8104550b1457dc95f7584bd77d0f313f75a",
+      "sourceType": "github",
+      "skillPath": "skills/linear-cli/SKILL.md",
+      "computedHash": "ee3567bde163e0375aa93cb2548f742b739771818cac107fb8c6ddf58f1f2684"
+    },
+    "playwriter": {
+      "source": "remorses/playwriter",
+      "ref": "bfca64f8ecf33b7fd1380c24975877ee97408084",
+      "sourceType": "github",
+      "skillPath": "skills/playwriter/SKILL.md",
+      "computedHash": "7f21ea41d9c81f3b43fe0f3de6c95d4187594a310c9b1892c11b1f5a26c4b925"
+    },
+    "refactoring-ui": {
+      "source": "wondelai/skills",
+      "ref": "c172996495bed0fcd26896a9416b2093fd7073f0",
+      "sourceType": "github",
+      "skillPath": "refactoring-ui/SKILL.md",
+      "computedHash": "27f1bda9fe53f7565928109a283a8ca20dba74ed9aab8d2ad78140f3ae658e83"
+    },
+    "stop-slop": {
+      "source": "hardikpandya/stop-slop",
+      "ref": "8da1f030185bdfe8471220585162991eaeb970e9",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "617bf97d33162a6bd0da4f40a97aac589de58e5a6c9cf011ed6108992210e7cb"
+    }
+  }
+}

@@ -10,7 +10,9 @@ The `home/` directory mirrors `$HOME`; Stow links its contents into place.
 - Pi: settings, prompts, skills, extensions, permissions, and account profiles
 
 Credentials, package caches, sessions, generated plugins, and machine-local state
-are excluded from Git.
+are excluded from Git. External agent skills are declared in `skills-lock.json`
+and restored into an ignored cache; locally authored Pi skills remain tracked
+under `home/.pi/agent/skills/`.
 
 ## Install
 
@@ -23,9 +25,11 @@ cd ~/dotfiles
 The bootstrap script:
 
 1. Installs GNU Stow with Homebrew on macOS or `apt` on Debian/Ubuntu.
-2. Links the tracked configuration into `$HOME`.
-3. Installs TPM and updates Pi packages.
-4. Creates isolated Pi account profiles.
+2. Installs TPM.
+3. Links the tracked configuration into `$HOME`.
+4. Restores external agent skills from `skills-lock.json`.
+5. Updates Pi packages.
+6. Creates isolated Pi account profiles.
 
 Open tmux and press `prefix + I` to install its plugins. Neovim installs its
 plugins on first launch. Install the toolchain declared in mise with:

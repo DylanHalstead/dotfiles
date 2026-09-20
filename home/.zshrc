@@ -5,8 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# User-installed executables, including mise.
+export PATH="$HOME/.local/bin:$PATH"
 
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 autoload -U compinit && compinit
@@ -179,3 +179,6 @@ alias vi=nvim
 
 # pi profiles — auth-only account switching (see ~/.pi/profiles.sh)
 [ -f ~/.pi/profiles.sh ] && source ~/.pi/profiles.sh
+
+# linear
+export LINEAR_TEAM_ID="NA"

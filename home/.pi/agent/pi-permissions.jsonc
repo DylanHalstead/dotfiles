@@ -44,9 +44,12 @@
   "special": {
     "doom_loop": "ask",
     "external_directory": "ask",
-    "external_directory:~/repos/*": "allow",
-    "external_directory:~/dotfiles/*": "allow",
-    "external_directory:~/.pi/*": "allow",
+    "external_directory:/Users/dylan/repos/*": "allow",
+    "external_directory:/Users/dylan/dotfiles/*": "allow",
+    "external_directory:/Users/dylan/.pi/*": "allow",
+    "external_directory:/home/dylan/repos/*": "allow",
+    "external_directory:/home/dylan/dotfiles/*": "allow",
+    "external_directory:/home/dylan/.pi/*": "allow",
     "external_directory:/opt/homebrew/Cellar/pi-coding-agent/*": "allow",
     "external_directory:/home/linuxbrew/.linuxbrew/Cellar/pi-coding-agent/*": "allow"
   }

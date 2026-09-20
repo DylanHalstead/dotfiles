@@ -3,6 +3,7 @@
 
 # Machine-local assistant settings
 **/.claude/settings.local.json
+home/.agents/.skill-lock.json
 
 # Secrets — gh stores the OAuth token here
 home/.config/gh/hosts.yml
@@ -23,6 +24,7 @@ home/.pi/agent/sandbox/projects.json
 home/.pi/agent/extensions/*/config.json
 home/.pi/agent/extensions/*/logs/
 home/.pi/web-search.json
+home/.pi/agent/web-search.json
 home/.pi/config/
 # Per-machine profile dirs (symlinks + per-profile auth.json). profiles.sh is tracked.
 home/.pi/profiles/

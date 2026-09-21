@@ -19,9 +19,12 @@ of forcing a change.
 
 The target defines the blast radius. Read the whole target and its call sites
 before editing — unlike a review, you are not limited to recently changed
-lines. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow
-its instructions to identify and load every repository skill that matches this
-task before restructuring anything.
+lines. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` and
+`~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full before
+restructuring anything. Follow their instructions to identify and load every
+repository skill that matches this task. When business invariants or domain
+boundaries are central, also read
+`~/.pi/agent/skills/domain-driven-design/SKILL.md` in full.
 
 ## Rules
 

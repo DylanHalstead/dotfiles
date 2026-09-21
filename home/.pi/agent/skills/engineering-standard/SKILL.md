@@ -41,9 +41,11 @@ code to establish the convention. Name representative files when the pattern
 supports a design decision. Do not call a generic best practice an improvement
 when it fights a sound local convention.
 
-Load `software-design-philosophy` when a task introduces or reshapes module
-boundaries, APIs, abstractions, or architecture. Load `domain-driven-design`
-when business invariants or domain boundaries are central to the task.
+Read `~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full for
+substantial feature work, structural refactors, or changes to module boundaries,
+APIs, abstractions, or architecture. Read
+`~/.pi/agent/skills/domain-driven-design/SKILL.md` in full when business
+invariants or domain boundaries are central to the task.
 
 ## Scope and design
 
@@ -90,7 +92,8 @@ or measurement. Do not sacrifice clarity for an unmeasured hot path.
 
 ## Domain modeling
 
-Do not apply DDD by default. Load `domain-driven-design` when the work changes
+Do not apply DDD by default. Read
+`~/.pi/agent/skills/domain-driven-design/SKILL.md` in full when the work changes
 business rules, invariants, model boundaries, or service boundaries. Skip it
 for scripts, infrastructure glue, and CRUD with no meaningful domain invariant.
 

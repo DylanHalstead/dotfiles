@@ -37,7 +37,13 @@ existing tests and type-checker is encouraged.
 
 Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow its
 instructions to identify and load every repository skill that matches this task
-before judging anything. Repository skills matter most here: a repository that
+before judging anything. When the review covers substantial feature work,
+structural refactoring, or material API, module, abstraction, or architecture
+changes, also read
+`~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full. When business
+invariants or domain boundaries are central, also read
+`~/.pi/agent/skills/domain-driven-design/SKILL.md` in full. Repository skills
+matter most here: a repository that
 ships its own review skill has already decided what its reviews are about, and
 that decision outranks this checklist.
 

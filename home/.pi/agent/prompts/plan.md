@@ -30,7 +30,11 @@ search, and run read-only commands freely.
 
 1. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow its
    instructions to identify and load every repository skill that matches this
-   task before designing anything.
+   task before designing anything. For substantial feature work, structural
+   refactors, or material API, module, abstraction, or architecture decisions,
+   also read `~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full.
+   When business invariants or domain boundaries are central, also read
+   `~/.pi/agent/skills/domain-driven-design/SKILL.md` in full.
 2. Understand the requirements. Ask clarifying questions before planning if
    the request is ambiguous. Ask at any point in the process, not only at the
    start; a wrong assumption is cheaper to fix now than in the executor's

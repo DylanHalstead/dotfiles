@@ -19,9 +19,10 @@ unknown unknowns.
 Prefer deep modules: simple interfaces that hide substantial implementation
 complexity. Keep each design decision in one place, pull complexity down into
 the module that owns it, and avoid layers that only forward calls. Design for
-reading and change, not for the shortest implementation. Load the
-`software-design-philosophy` skill when a task introduces or reshapes module
-boundaries, APIs, abstractions, or other material design decisions.
+reading and change, not for the shortest implementation. The guidance here is
+enough for local changes. For substantial feature work, structural refactors,
+or changes to modules, APIs, abstractions, or architecture, read
+`~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full.
 
 # Scope discipline
 

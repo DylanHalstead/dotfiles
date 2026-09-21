@@ -7,7 +7,7 @@ Before writing new code, stop at the first rung that holds:
 (7) only then write the minimum that works.
 Minimalism applies to the solution, never to safety (keep validation, error
 handling, security, accessibility) and never to reading. Understand the
-problem fully before choosing a rung.
+problem before choosing a rung.
 
 # Software design
 
@@ -19,40 +19,40 @@ unknown unknowns.
 Prefer deep modules: simple interfaces that hide substantial implementation
 complexity. Keep each design decision in one place, pull complexity down into
 the module that owns it, and avoid layers that only forward calls. Design for
-reading and change, not for the shortest implementation. The guidance here is
+reading and change. Treat implementation length as secondary. The guidance is
 enough for local changes. For substantial feature work, structural refactors,
 or changes to modules, APIs, abstractions, or architecture, read
 `~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full.
 
 # Scope discipline
 
-Every changed line traces to the request. Editing adjacent code because you
-noticed it is how a reviewable diff becomes an unreviewable one.
+Change only what the request requires. Preserve unrelated formatting, names,
+and code, including existing dead code. Report dead code instead of expanding
+the diff to remove it.
 
-- Do not reformat, rename, or improve code the task did not require. Match the
-  surrounding style even where you would write it differently.
-- Delete the imports, variables, and functions that *your* change orphaned.
-  Leave pre-existing dead code in place and report it instead.
-- Fix the root cause, not the reported symptom. Before patching a function,
-  find its other callers: one guard inside the shared function beats one guard
-  per caller, and fixing only the reported path leaves the siblings broken.
-- Say what you deliberately left alone. An unreported fix and an unreported
-  omission cost the reader the same.
+Remove imports, variables, and functions that your change makes unused. Before
+patching shared behavior, inspect its callers and fix the cause in the module
+that owns it. Report deliberate omissions with the completed work.
+
+# Context independence
+
+Write code and durable artifacts for a reader who has no access to the prompt,
+plan, conversation, or review. Use names and comments for lasting domain
+rationale rather than edit history. Remove unshipped intermediate APIs and
+update their callers instead of adding compatibility layers.
 
 # Commit messages
 
-Commits are scanned as one-line log output, so the subject must carry the
-whole message. Write subject-only commits with no body, following the subject
-rules from cbea.ms/git-commit. Use Conventional Commit prefixes only when a
-repo's own instructions require them.
+Write subject-only commits with no body, following cbea.ms/git-commit. Use a
+Conventional Commit prefix only when the repository requires one.
 
-1. Subject ≤ 50 characters
-2. Capitalize the subject line
-3. End the subject without a period
-4. Imperative mood: the subject completes "If applied, this commit will …"
+1. Keep the subject at 50 characters or fewer
+2. Capitalize the first word
+3. Omit the final period
+4. Use imperative mood: "If applied, this commit will …"
 
-One commit = one reversible intent. A subject that needs "and" means two
-commits.
+Give each commit one reversible intent. Split changes that require "and" in the
+subject.
 
 <example>
 Weak:   feat(auth): added new session refresh logic and fixed the expiry bug

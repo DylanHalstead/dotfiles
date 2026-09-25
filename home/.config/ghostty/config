@@ -1,0 +1,4 @@
+theme = Catppuccin Mocha
+macos-option-as-alt = true
+font-family = "JetBrainsMono Nerd Font Mono"
+auto-update-channel = tip

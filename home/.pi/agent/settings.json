@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.87.0",
+  "lastChangelogVersion": "0.87.1",
   "theme": "dracula",
   "defaultThinkingLevel": "medium",
   "hideThinkingBlock": true,
@@ -13,6 +13,7 @@
     "mermaid": "streaming"
   },
   "tuiMode": "fullscreen",
+  "npmCommand": ["pnpm"],
   "packages": [
     "npm:pi-permission-system",
     "npm:pi-web-access",

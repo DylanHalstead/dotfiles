@@ -23,6 +23,13 @@
     "*rm -rf /*": "deny",
     "*rm -rf ~*": "deny",
     "*rm -fr /*": "deny",
+
+    // /tmp is disposable workspace space. These later rules override the
+    // broad filesystem-root protections above for its contents only.
+    "*rm -rf /tmp/*": "allow",
+    "*rm -rf /private/tmp/*": "allow",
+    "*rm -fr /tmp/*": "allow",
+    "*rm -fr /private/tmp/*": "allow",
     "*mkfs*": "deny",
     "*dd if=*of=/dev/*": "deny",
     "*chmod -R 777 /*": "deny",
@@ -44,6 +51,8 @@
   "special": {
     "doom_loop": "ask",
     "external_directory": "ask",
+    "external_directory:/tmp/*": "allow",
+    "external_directory:/private/tmp/*": "allow",
     "external_directory:/Users/dylan/repos/*": "allow",
     "external_directory:/Users/dylan/dotfiles/*": "allow",
     "external_directory:/Users/dylan/.pi/*": "allow",

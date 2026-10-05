@@ -126,6 +126,8 @@ if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi
 
+[ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
+
 # rails macos dev
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 

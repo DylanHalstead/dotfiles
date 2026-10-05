@@ -37,7 +37,7 @@ echo "==> Stowing configs into \$HOME ..."
 cd "$DOTFILES_DIR"
 stow -t "$HOME" -v home
 
-# --- 4. External agent skills -------------------------------------------------
+# --- 4. Agent skills ----------------------------------------------------------
 # skills-lock.json is the source of truth; generated copies stay untracked in
 # .agents/skills and are exposed globally through the stowed ~/.agents/skills.
 if command -v npx >/dev/null 2>&1; then

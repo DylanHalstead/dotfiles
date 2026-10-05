@@ -35,14 +35,14 @@ files, or commit anything. Write a review artifact only when the target
 contains `--save`; remove that marker before establishing scope. Running the
 existing tests and type-checker is encouraged.
 
-Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow its
+Read `~/.agents/skills/engineering-standard/SKILL.md` in full. Follow its
 instructions to identify and load every repository skill that matches this task
 before judging anything. When the review covers substantial feature work,
 structural refactoring, or material API, module, abstraction, or architecture
 changes, also read
-`~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full. When business
+`~/.agents/skills/software-design-philosophy/SKILL.md` in full. When business
 invariants or domain boundaries are central, also read
-`~/.pi/agent/skills/domain-driven-design/SKILL.md` in full. Repository skills
+`~/.agents/skills/domain-driven-design/SKILL.md` in full. Repository skills
 matter most here: a repository that
 ships its own review skill has already decided what its reviews are about, and
 that decision outranks this checklist.

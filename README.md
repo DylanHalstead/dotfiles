@@ -10,9 +10,11 @@ The `home/` directory mirrors `$HOME`; Stow links its contents into place.
 - Pi: settings, prompts, skills, extensions, permissions, and account profiles
 
 Credentials, package caches, sessions, generated plugins, and machine-local state
-are excluded from Git. External agent skills are declared in `skills-lock.json`
-and restored into an ignored cache; locally authored Pi skills remain tracked
-under `home/.pi/agent/skills/`.
+are excluded from Git. Agent skills are declared in `skills-lock.json` and restored
+into an ignored cache exposed at `~/.agents/skills/`. The reusable skills live in
+[DylanHalstead/skills](https://github.com/DylanHalstead/skills); agent instructions
+and Pi prompts remain here. Edit skills in their source repository, publish the
+changes, then update the pinned revision and restore the installed copies.
 
 ## Install
 
@@ -27,7 +29,7 @@ The bootstrap script:
 1. Installs GNU Stow with Homebrew on macOS or `apt` on Debian/Ubuntu.
 2. Installs TPM.
 3. Links the tracked configuration into `$HOME`.
-4. Restores external agent skills from `skills-lock.json`.
+4. Restores agent skills from `skills-lock.json`.
 5. Updates Pi packages.
 6. Creates isolated Pi account profiles.
 

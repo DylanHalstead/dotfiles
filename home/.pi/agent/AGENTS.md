@@ -22,7 +22,7 @@ the module that owns it, and avoid layers that only forward calls. Design for
 reading and change. Treat implementation length as secondary. The guidance is
 enough for local changes. For substantial feature work, structural refactors,
 or changes to modules, APIs, abstractions, or architecture, read
-`~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full.
+`~/.agents/skills/software-design-philosophy/SKILL.md` in full.
 
 # Scope discipline
 

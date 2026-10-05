@@ -1,6 +1,20 @@
 {
   "version": 1,
   "skills": {
+    "domain-driven-design": {
+      "source": "DylanHalstead/skills",
+      "ref": "9dfa9e56f4992a4fece498f575e60cb39c794238",
+      "sourceType": "github",
+      "skillPath": "skills/domain-driven-design/SKILL.md",
+      "computedHash": "d63b543834373a5a1d795c15a9ce9908b0f9ea9d632518aa586bbaff6eb1e81e"
+    },
+    "engineering-standard": {
+      "source": "DylanHalstead/skills",
+      "ref": "9dfa9e56f4992a4fece498f575e60cb39c794238",
+      "sourceType": "github",
+      "skillPath": "skills/engineering-standard/SKILL.md",
+      "computedHash": "cf0439c6456992b6ef6d05531842fef55d5f457f32405fcf8dde87826cad7ad0"
+    },
     "linear-cli": {
       "source": "schpet/linear-cli",
       "ref": "7486a8104550b1457dc95f7584bd77d0f313f75a",
@@ -15,12 +29,33 @@
       "skillPath": "skills/playwriter/SKILL.md",
       "computedHash": "7f21ea41d9c81f3b43fe0f3de6c95d4187594a310c9b1892c11b1f5a26c4b925"
     },
+    "pr-description": {
+      "source": "DylanHalstead/skills",
+      "ref": "9dfa9e56f4992a4fece498f575e60cb39c794238",
+      "sourceType": "github",
+      "skillPath": "skills/pr-description/SKILL.md",
+      "computedHash": "bb602901eb1e6da6ec897e10245f020350d1de70c878d6bf83c30163f7b8bccd"
+    },
     "refactoring-ui": {
       "source": "wondelai/skills",
       "ref": "c172996495bed0fcd26896a9416b2093fd7073f0",
       "sourceType": "github",
       "skillPath": "refactoring-ui/SKILL.md",
       "computedHash": "27f1bda9fe53f7565928109a283a8ca20dba74ed9aab8d2ad78140f3ae658e83"
+    },
+    "skill-creator": {
+      "source": "DylanHalstead/skills",
+      "ref": "9dfa9e56f4992a4fece498f575e60cb39c794238",
+      "sourceType": "github",
+      "skillPath": "skills/skill-creator/SKILL.md",
+      "computedHash": "1bac09b5aa99938af62dd62e5089ff7f818d33276c78c6664eae7fc29245c7f8"
+    },
+    "software-design-philosophy": {
+      "source": "DylanHalstead/skills",
+      "ref": "9dfa9e56f4992a4fece498f575e60cb39c794238",
+      "sourceType": "github",
+      "skillPath": "skills/software-design-philosophy/SKILL.md",
+      "computedHash": "7b12b3fdb36b2eac1cbbcd9014264f55e2ac0bd7327d18e73df3d1e77fc51abb"
     },
     "stop-slop": {
       "source": "hardikpandya/stop-slop",

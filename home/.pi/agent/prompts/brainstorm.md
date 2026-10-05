@@ -18,13 +18,13 @@ approaches, not building one. Write an artifact only when the request contains
 
 ## How to research
 
-1. Read `~/.pi/agent/skills/engineering-standard/SKILL.md` in full. Follow its
+1. Read `~/.agents/skills/engineering-standard/SKILL.md` in full. Follow its
    instructions to identify and load every repository skill that matches this
    task. For substantial feature work, structural refactors, or material API,
    module, abstraction, or architecture decisions, also read
-   `~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full. When
+   `~/.agents/skills/software-design-philosophy/SKILL.md` in full. When
    business invariants or domain boundaries are central, also read
-   `~/.pi/agent/skills/domain-driven-design/SKILL.md` in full. The code quality
+   `~/.agents/skills/domain-driven-design/SKILL.md` in full. The code quality
    bars do not require critiquing implementations you have not decided to
    build. Understand the request, and ask clarifying questions before
    researching if the goal is ambiguous.

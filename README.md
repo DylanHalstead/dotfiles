@@ -77,7 +77,8 @@ CLI integrations live in `.config/zsh/integrations.zsh`; Bash and Zsh share the
 Pi account helpers in `.pi/profiles.sh`.
 LocalStack defaults apply to `localstack` and `awslocal` commands, without setting
 the region or emulator options for other programs. Explicit environment values
-override those defaults.
+override those defaults. The `linear` command defaults to team `NA`; set
+`LINEAR_TEAM_ID` to select another team.
 
 The tracked Git identity is personal. Override it in a work repository:
 

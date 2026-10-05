@@ -69,6 +69,3 @@ alias vi=nvim
 
 # pi profiles — auth-only account switching (see ~/.pi/profiles.sh)
 [ -f ~/.pi/profiles.sh ] && source ~/.pi/profiles.sh
-
-# linear
-export LINEAR_TEAM_ID="NA"

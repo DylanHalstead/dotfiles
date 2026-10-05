@@ -14,6 +14,11 @@ awslocal() {
     command aws --endpoint-url="http://${LOCALSTACK_HOST:-localhost}:4566" --profile=localstack "$@"
 }
 
+# Keep the default team on Linear invocations, not in the shell environment.
+linear() {
+  LINEAR_TEAM_ID="${LINEAR_TEAM_ID:-NA}" command linear "$@"
+}
+
 if [ -x /Applications/Windsurf.app/Contents/MacOS/Electron ]; then
   alias surf="/Applications/Windsurf.app/Contents/MacOS/Electron"
 fi

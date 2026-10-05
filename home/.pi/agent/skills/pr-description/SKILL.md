@@ -25,6 +25,12 @@ Otherwise, prefer targeted checks of the facts the description relies on.
 Do not invent motivation. Ask the user when the reason for the change cannot be
 established from the conversation, issue, commits, or repository context.
 
+## Title
+
+Write a concise title describing the changed behavior. Follow the repository's
+title convention; apply commit-message rules only when the repository also
+requires them for PR titles.
+
 ## Default body
 
 Use this structure when the repository does not define one:
@@ -103,7 +109,7 @@ risk. Cut mechanism before cutting intent.
 
 Use active voice and specific verbs. Keep one idea per sentence and one term per
 concept. Prefer a concrete sentence over a heading with one weak bullet beneath
-it. Do not repeat the title or start with “This PR.”
+it. Avoid repeating the title verbatim or opening with “This PR.”
 
 Write for a competent engineer with limited attention. Point out only context
 that the author knows and the reviewer needs.

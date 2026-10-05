@@ -5,8 +5,8 @@ description: "Guides and evaluates software design using John Ousterhout's A Phi
 
 # Software design philosophy
 
-Use this skill for material design decisions. The global guidance carries the
-basic lens; this skill supplies the deeper diagnostic.
+Use these criteria to judge material design decisions. Prefer changes that reduce
+the knowledge and coordination required for future work.
 
 ## Complexity
 
@@ -35,7 +35,8 @@ Red flags:
 
 - shallow modules and pass-through methods
 - information leakage across modules
-- temporal decomposition around execution order instead of owned knowledge
+- modules organized around successive processing steps that repeatedly expose
+  the same implementation knowledge
 - special and general behavior mixed together
 - repeated decisions or assumptions
 - interfaces that require long explanations
@@ -86,6 +87,9 @@ change, follow the established design without manufacturing alternatives.
 Prefer strategic improvements that reduce complexity inside the requested
 scope. Do not turn “leave it better” into unrelated cleanup. A broad structural
 problem belongs in a separate refactor.
+
+For a proposed design change, identify the current complexity, explain how the
+change reduces it, and state the main trade-off.
 
 ## Review questions
 

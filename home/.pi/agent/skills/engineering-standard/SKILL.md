@@ -32,8 +32,9 @@ Keep findings clean:
 
 - **One finding, one owner.** Report an overlapping concern once under the
   skill that best owns it.
-- **Name what you used.** List loaded skills in a persisted artifact so a
-  reader can trace the judgment.
+- **Name what mattered.** When recording a review or design decision, identify
+  specialized guidance that materially affected the judgment. This does not
+  require creating a separate artifact.
 
 For a material change, read two or three comparable implementations to learn
 the local pattern. For a small or mechanical change, inspect only enough nearby
@@ -41,11 +42,20 @@ code to establish the convention. Name representative files when the pattern
 supports a design decision. Do not call a generic best practice an improvement
 when it fights a sound local convention.
 
-Read `~/.pi/agent/skills/software-design-philosophy/SKILL.md` in full for
-substantial feature work, structural refactors, or changes to module boundaries,
-APIs, abstractions, or architecture. Read
-`~/.pi/agent/skills/domain-driven-design/SKILL.md` in full when business
-invariants or domain boundaries are central to the task.
+Read these companion skills in full when their conditions apply:
+
+- **`software-design-philosophy`**: substantial feature work, structural
+  refactors, or changes to module boundaries, APIs, abstractions, or architecture.
+  Fallback path: `../software-design-philosophy/SKILL.md`.
+- **`domain-driven-design`**: changes to business rules, invariants, model
+  boundaries, or service boundaries. Skip scripts, infrastructure glue, and CRUD
+  with no meaningful domain invariant. Fallback path: `../domain-driven-design/SKILL.md`.
+
+Find each skill in the available skills list and read its advertised `SKILL.md`
+path; its description alone is not the guidance. If it is not listed, resolve
+its fallback path relative to this skill's directory, not the working directory.
+If neither location is available, ask for the skill's location before proceeding
+with work that requires it. Continue independent work.
 
 ## Scope and design
 
@@ -55,20 +65,13 @@ unrelated cleanup into the change. Remove imports, variables, and functions
 that your change makes dead; report pre-existing dead code instead of expanding
 the diff.
 
-For a material design decision, compare an alternative built around a
-different constraint and prefer the option that removes the most complexity.
-Do not manufacture a second design for a local fix whose shape follows an
-established pattern.
-
 Add an abstraction only when it enforces an invariant, hides non-obvious
 complexity, or removes duplication callers would otherwise get wrong. Prefer a
 simple interface over a simple implementation and keep side effects visible in
 names and orchestration.
 
-Comments explain contracts, rationale, invariants, assumptions, and non-obvious
-trade-offs. They must make sense without this conversation, a plan, or a review
-thread. Do not restate code. Document a deliberate simplification when it has a
-known ceiling, including what would force a more complex design.
+Comments preserve non-obvious contracts and rationale for a reader without this
+conversation. Keep detailed design and comment criteria in the design skill.
 
 ## Quality bars
 
@@ -89,13 +92,6 @@ Hold changed code to all four. When they conflict, state the trade-off.
 
 Performance claims need evidence. Point to a round trip, allocation, scan, lock,
 or measurement. Do not sacrifice clarity for an unmeasured hot path.
-
-## Domain modeling
-
-Do not apply DDD by default. Read
-`~/.pi/agent/skills/domain-driven-design/SKILL.md` in full when the work changes
-business rules, invariants, model boundaries, or service boundaries. Skip it
-for scripts, infrastructure glue, and CRUD with no meaningful domain invariant.
 
 ## Review findings
 
@@ -119,7 +115,7 @@ that reduce the most risk or complexity.
 
 ## Honest uncertainty
 
-Say what you did not check. “Not covered by tests,” “could not verify without
-running the migration,” and “depends on a runtime value I did not trace” are
-complete findings. Do not write confident conclusions about code you did not
-inspect.
+Say what you did not check. Report verification gaps separately from defects.
+Missing tests or an unrun check do not, by themselves, establish incorrect
+behavior. State what evidence would resolve an uncertainty. Do not write
+confident conclusions about code you did not inspect.

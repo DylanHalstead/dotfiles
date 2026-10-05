@@ -116,11 +116,10 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# fnm
-FNM_PATH="$HOME/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="$FNM_PATH:$PATH"
-  eval "`fnm env`"
+# mise
+export PATH="$HOME/.local/bin:$PATH"
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash)"
 fi
 [ -f "$HOME/.deno/env" ] && . "$HOME/.deno/env"
 PATH=~/.console-ninja/.bin:$PATH

@@ -15,6 +15,13 @@
       "skillPath": "skills/engineering-standard/SKILL.md",
       "computedHash": "cf0439c6456992b6ef6d05531842fef55d5f457f32405fcf8dde87826cad7ad0"
     },
+    "go-development": {
+      "source": "DylanHalstead/skills",
+      "ref": "d90827e866c76660db97d4d59a974dafbdda7d05",
+      "sourceType": "github",
+      "skillPath": "skills/go-development/SKILL.md",
+      "computedHash": "c89bf95cb5d3d6940df3ccf07bd85469f32e956b403deec8a6beac3cbaba062d"
+    },
     "linear-cli": {
       "source": "schpet/linear-cli",
       "ref": "7486a8104550b1457dc95f7584bd77d0f313f75a",

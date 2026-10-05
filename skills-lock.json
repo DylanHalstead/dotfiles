@@ -31,10 +31,10 @@
     },
     "playwriter": {
       "source": "remorses/playwriter",
-      "ref": "bfca64f8ecf33b7fd1380c24975877ee97408084",
+      "ref": "33d5c5a2c5ebf702e387d94d609e038c98e0acec",
       "sourceType": "github",
       "skillPath": "skills/playwriter/SKILL.md",
-      "computedHash": "7f21ea41d9c81f3b43fe0f3de6c95d4187594a310c9b1892c11b1f5a26c4b925"
+      "computedHash": "189bbff9d353e31bdf824e7806369758e44de743616792b688acdf6729297075"
     },
     "pr-description": {
       "source": "DylanHalstead/skills",

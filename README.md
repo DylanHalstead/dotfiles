@@ -70,6 +70,9 @@ pi-profile personal    # create or refresh a profile
 
 Shell configuration discovers optional tools at runtime and supports both
 macOS and Linux. macOS-only integrations activate only when installed.
+Zsh loads executable paths and the default editor from `.zprofile`; `.zshrc`
+owns the prompt, plugins, history, keybindings, and interactive tool activation.
+Interactive non-login shells also load `.zprofile` to find the same tools.
 
 The tracked Git identity is personal. Override it in a work repository:
 

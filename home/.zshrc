@@ -5,8 +5,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# User-installed executables, including mise.
-export PATH="$HOME/.local/bin:$PATH"
+# Login shells already loaded this environment; direct interactive shells need it too.
+if [[ ! -o login ]]; then
+  source "$HOME/.zprofile"
+fi
 
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
@@ -19,13 +21,7 @@ plugins=(rails ruby git gh golang postgres docker docker-compose history-substri
 source $ZSH/oh-my-zsh.sh
 
 # Google Cloud SDK
-[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ] && source "$HOME/google-cloud-sdk/path.zsh.inc"
 [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ] && source "$HOME/google-cloud-sdk/completion.zsh.inc"
-
-# Homebrew PostgreSQL tools (macOS)
-if command -v brew >/dev/null 2>&1; then
-  export PATH="$(brew --prefix libpq 2>/dev/null)/bin:$PATH"
-fi
 
 # mise
 if command -v mise >/dev/null 2>&1; then
@@ -36,8 +32,6 @@ fi
 
 # rails macos dev
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
-
-export EDITOR='nvim'
 
 # LocalStack awslocal alias
 export ACTIVATE_PRO=0

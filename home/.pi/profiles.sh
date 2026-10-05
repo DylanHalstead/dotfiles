@@ -20,41 +20,52 @@
 : "${PI_PROFILES_DIR:=$HOME/.pi/profiles}"
 export PI_AGENT_DIR PI_PROFILES_DIR
 
+# Profile names identify direct children of PI_PROFILES_DIR.
+_pi_profile_validate() {
+  case "${1:-}" in
+    ''|[!a-zA-Z0-9]*|*[!a-zA-Z0-9_-]*)
+      echo "pi profile: use a name starting with a letter or digit, containing only letters, digits, underscores, or hyphens" >&2
+      return 2
+      ;;
+  esac
+}
+
 # _pi_profile_sync <name>: build/refresh the profile dir. Symlinks every shared
 # entry from the agent dir except auth.json; never touches an existing auth.json.
 _pi_profile_sync() {
-  [ -n "$1" ] || { echo "pi profile: name required" >&2; return 1; }
+  _pi_profile_validate "${1:-}" || return
+  local _pps_dir _pps_entry
+  [ -d "$PI_AGENT_DIR" ] || { echo "pi profile: agent directory not found: $PI_AGENT_DIR" >&2; return 1; }
   _pps_dir="$PI_PROFILES_DIR/$1"
   mkdir -p "$_pps_dir" || return 1
   find "$PI_AGENT_DIR" -maxdepth 1 -mindepth 1 ! -name auth.json -print | while IFS= read -r _pps_entry; do
     ln -sfn "$_pps_entry" "$_pps_dir/${_pps_entry##*/}"
   done
-  unset _pps_dir
 }
 
 # pi: wrapper that selects a profile config dir before delegating to real pi.
 pi() {
-  if [ -n "$PI_CODING_AGENT_DIR" ]; then
+  if [ -n "${PI_CODING_AGENT_DIR:-}" ]; then
     command pi "$@"
     return
   fi
-  _pi_profile="${PI_PROFILE:-work}"
-  if [ "$1" = "-p" ] || [ "$1" = "--profile" ]; then
+  local _pi_profile="${PI_PROFILE:-work}" _pi_dir _pi_rc=0
+  if [ "${1:-}" = "-p" ] || [ "${1:-}" = "--profile" ]; then
+    [ "$#" -ge 2 ] || { echo "usage: pi --profile <name> [args...]" >&2; return 2; }
     _pi_profile="$2"
     shift 2
   fi
+  _pi_profile_validate "$_pi_profile" || return
   _pi_dir="$PI_PROFILES_DIR/$_pi_profile"
-  [ -d "$_pi_dir" ] || _pi_profile_sync "$_pi_profile" || return 1
-  PI_CODING_AGENT_DIR="$_pi_dir" command pi "$@"
-  _pi_rc=$?
-  unset _pi_profile _pi_dir
-  return $_pi_rc
+  [ -d "$_pi_dir" ] || _pi_profile_sync "$_pi_profile" || return
+  PI_CODING_AGENT_DIR="$_pi_dir" command pi "$@" || _pi_rc=$?
+  return "$_pi_rc"
 }
 
 # pi-profile <name>: create/refresh a profile, then log in if it has no auth yet.
 pi-profile() {
-  [ -n "$1" ] || { echo "usage: pi-profile <name>" >&2; return 1; }
-  _pi_profile_sync "$1" || return 1
+  [ "$#" -eq 1 ] || { echo "usage: pi-profile <name>" >&2; return 2; }
+  _pi_profile_sync "$1" || return
   if [ ! -e "$PI_PROFILES_DIR/$1/auth.json" ]; then
     echo "pi profile '$1' created; run: pi -p $1  then /login" >&2
   else

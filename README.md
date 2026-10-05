@@ -33,6 +33,15 @@ The bootstrap script:
 5. Updates Pi packages.
 6. Creates isolated Pi account profiles.
 
+Install Oh My Zsh, mise, and fzf separately. On macOS, install fzf with:
+
+```bash
+brew install fzf
+```
+
+Bash and Zsh load fzf keybindings and completion when it is installed: `Ctrl+R`
+searches command history, `Ctrl+T` inserts file paths, and `Alt+C` selects a directory.
+
 Open tmux and press `prefix + I` to install its plugins. Neovim installs its
 plugins on first launch. Install the toolchain declared in mise with:
 

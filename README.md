@@ -75,6 +75,9 @@ owns the prompt, plugins, history, keybindings, and interactive tool activation.
 Interactive non-login shells also load `.zprofile` to find the same tools.
 CLI integrations live in `.config/zsh/integrations.zsh`; Bash and Zsh share the
 Pi account helpers in `.pi/profiles.sh`.
+LocalStack defaults apply to `localstack` and `awslocal` commands, without setting
+the region or emulator options for other programs. Explicit environment values
+override those defaults.
 
 The tracked Git identity is personal. Override it in a work repository:
 

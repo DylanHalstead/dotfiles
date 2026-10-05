@@ -32,11 +32,6 @@ fi
 # rails macos dev
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
-# LocalStack awslocal alias
-export ACTIVATE_PRO=0
-export AWS_DEFAULT_REGION=us-east-1
-export LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=50
-
 [ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

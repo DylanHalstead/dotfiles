@@ -42,6 +42,6 @@
 	updateRefs = true
 [core]
 	editor = nvim
-	excludesfile = ~/.gitignore
+	excludesfile = ~/.config/git/ignore
 [pull]
 	rebase = true

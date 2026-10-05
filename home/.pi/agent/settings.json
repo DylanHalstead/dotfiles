@@ -13,7 +13,6 @@
     "mermaid": "streaming"
   },
   "tuiMode": "fullscreen",
-  "npmCommand": ["pnpm"],
   "packages": [
     "npm:pi-permission-system",
     "npm:pi-web-access",

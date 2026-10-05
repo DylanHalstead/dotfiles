@@ -19,6 +19,9 @@ The language comes from collaboration with domain experts. Do not invent a
 glossary and assume it represents the business. Use tests and code to keep the
 agreed language consistent.
 
+Ask for clarification when an unknown business rule changes identity, validity,
+or the consistency boundary. Do not invent the rule.
+
 ## Model behavior and identity
 
 Put invariants and rules with the state they govern. Entities and value objects
@@ -31,8 +34,9 @@ model made only of getters and setters scatters rules across callers.
   atomically. Let one root enforce its invariants.
 
 Keep aggregates small. Reference other aggregates by ID rather than object
-reference. Require immediate consistency inside an aggregate and accept
-explicit eventual consistency across aggregate boundaries.
+reference. Keep an aggregate's invariants within its atomic consistency boundary.
+Choose consistency across aggregates from the business requirements; use eventual
+consistency only when delayed updates are acceptable.
 
 ## Bound contexts
 

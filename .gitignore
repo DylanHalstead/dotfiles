@@ -6,7 +6,8 @@
 **/.claude/settings.local.json
 home/.agents/.skill-lock.json
 
-# Secrets — gh stores the OAuth token here
+# Secrets
+home/.zsh_secrets
 home/.config/gh/hosts.yml
 
 # TPM-managed tmux plugins (reinstalled via `prefix + I`)

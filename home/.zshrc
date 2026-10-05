@@ -9,7 +9,6 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
-autoload -U compinit && compinit
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"

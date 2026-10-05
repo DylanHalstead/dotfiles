@@ -11,6 +11,7 @@
 #   pi -p personal ...     # one-off profile for this invocation
 #   PI_PROFILE=personal pi # per-shell default
 #   pi-profile personal    # create/refresh a profile dir, then run /login in it
+#   pi-profiles-setup      # initialize work/personal profiles and migrate auth
 #
 # An explicit PI_CODING_AGENT_DIR always wins and bypasses profile handling, so
 # every other PI_* env var (PI_CODING_AGENT_SESSION_DIR, PI_PACKAGE_DIR,
@@ -41,6 +42,20 @@ _pi_profile_sync() {
   find "$PI_AGENT_DIR" -maxdepth 1 -mindepth 1 ! -name auth.json -print | while IFS= read -r _pps_entry; do
     ln -sfn "$_pps_entry" "$_pps_dir/${_pps_entry##*/}"
   done
+}
+
+# Initialize the standard accounts without replacing existing credentials.
+pi-profiles-setup() {
+  local profile work_auth="$PI_PROFILES_DIR/work/auth.json"
+  for profile in work personal; do
+    _pi_profile_sync "$profile" || return
+  done
+  if [ -f "$PI_AGENT_DIR/auth.json" ] && [ ! -e "$work_auth" ] && [ ! -L "$work_auth" ]; then
+    (umask 077; cp "$PI_AGENT_DIR/auth.json" "$work_auth") || return
+    chmod 600 "$work_auth" || return
+    echo "    Migrated existing credentials into the 'work' profile."
+  fi
+  echo "    Personal account: run  pi -p personal  then /login"
 }
 
 # pi: wrapper that selects a profile config dir before delegating to real pi.

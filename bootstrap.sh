@@ -65,15 +65,7 @@ if [ -f "$HOME/.pi/profiles.sh" ]; then
   echo "==> Setting up pi profiles (work, personal) ..."
   # shellcheck disable=SC1091
   . "$HOME/.pi/profiles.sh"
-  for profile in work personal; do
-    _pi_profile_sync "$profile"
-  done
-  if [ -f "$HOME/.pi/agent/auth.json" ] && [ ! -e "$HOME/.pi/profiles/work/auth.json" ]; then
-    cp "$HOME/.pi/agent/auth.json" "$HOME/.pi/profiles/work/auth.json"
-    chmod 600 "$HOME/.pi/profiles/work/auth.json"
-    echo "    Migrated existing credentials into the 'work' profile."
-  fi
-  echo "    Personal account: run  pi -p personal  then /login"
+  pi-profiles-setup
 fi
 
 cat <<'EOF'

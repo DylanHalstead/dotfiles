@@ -73,6 +73,8 @@ macOS and Linux. macOS-only integrations activate only when installed.
 Zsh loads executable paths and the default editor from `.zprofile`; `.zshrc`
 owns the prompt, plugins, history, keybindings, and interactive tool activation.
 Interactive non-login shells also load `.zprofile` to find the same tools.
+CLI integrations live in `.config/zsh/integrations.zsh`; Bash and Zsh share the
+Pi account helpers in `.pi/profiles.sh`.
 
 The tracked Git identity is personal. Override it in a work repository:
 

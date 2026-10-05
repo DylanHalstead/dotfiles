@@ -20,8 +20,7 @@ plugins=(rails ruby git gh golang postgres docker docker-compose history-substri
 
 source $ZSH/oh-my-zsh.sh
 
-# Google Cloud SDK
-[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ] && source "$HOME/google-cloud-sdk/completion.zsh.inc"
+source "$HOME/.config/zsh/integrations.zsh"
 
 # mise
 if command -v mise >/dev/null 2>&1; then
@@ -37,13 +36,8 @@ export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export ACTIVATE_PRO=0
 export AWS_DEFAULT_REGION=us-east-1
 export LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=50
-alias awslocal="AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_DEFAULT_REGION=\${DEFAULT_REGION:-\$AWS_DEFAULT_REGION} aws --endpoint-url=http://\${LOCALSTACK_HOST:-localhost}:4566 --profile=localstack"
 
 [ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
-
-if [ -x /Applications/Windsurf.app/Contents/MacOS/Electron ]; then
-  alias surf="/Applications/Windsurf.app/Contents/MacOS/Electron"
-fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

@@ -10,10 +10,10 @@
     },
     "engineering-standard": {
       "source": "DylanHalstead/skills",
-      "ref": "9dfa9e56f4992a4fece498f575e60cb39c794238",
+      "ref": "5b05fc43a61e14f951f1a4703aa04ea8f72af26a",
       "sourceType": "github",
       "skillPath": "skills/engineering-standard/SKILL.md",
-      "computedHash": "cf0439c6456992b6ef6d05531842fef55d5f457f32405fcf8dde87826cad7ad0"
+      "computedHash": "c3a610b717186ac6ac0b73bb6353b0f55b1f3647043723eb7b4bc66d443a4a1f"
     },
     "go-development": {
       "source": "DylanHalstead/skills",

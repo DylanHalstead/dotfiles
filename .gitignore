@@ -14,8 +14,7 @@ home/.config/gh/hosts.yml
 home/.config/tmux/plugins/
 
 # pi harness — credentials, machine state, and package installs.
-# Only settings.json and pi-permissions.jsonc are tracked; everything else
-# under ~/.pi is per-machine and must never be committed.
+# Shared configuration is tracked; ignore per-machine state below.
 home/.pi/agent/auth.json
 home/.pi/agent/trust.json
 home/.pi/agent/models-store.json

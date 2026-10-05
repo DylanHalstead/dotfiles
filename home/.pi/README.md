@@ -13,12 +13,14 @@ owns installation and profile usage.
 │   ├── AGENTS.md            personal engineering standards
 │   ├── extensions/          runtime behavior and enforced controls
 │   ├── prompts/             user-invoked workflows
-│   ├── skills/              detailed guidance loaded by task
 │   ├── sandbox/             OS sandbox policy and its local notes
 │   ├── pi-permissions.jsonc permission policy
 │   └── settings.json        models, packages, theme, and TUI settings
 └── profiles.sh              account selection and profile synchronization
 ```
+
+Skills are installed at `~/.agents/skills/` from the root `skills-lock.json`.
+See the repository root `README.md` for installation and maintenance.
 
 Repository `AGENTS.md` files own project commands, architecture, and local
 conventions. Nested files should hold rules for the code below them. Keep

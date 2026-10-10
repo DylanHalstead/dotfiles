@@ -1,8 +1,8 @@
 # Pi configuration
 
-This directory contains the shared Pi configuration. Account profiles reuse
-`agent/` and keep their credentials separate. The repository root `README.md`
-owns installation and profile usage.
+This directory contains shared Pi configuration. Account profiles keep their
+credentials and model scopes separate. The repository root `README.md` owns
+installation and profile usage.
 
 ## Layout
 
@@ -15,9 +15,16 @@ owns installation and profile usage.
 │   ├── prompts/             user-invoked workflows
 │   ├── sandbox/             OS sandbox policy and its local notes
 │   ├── pi-permissions.jsonc permission policy
-│   └── settings.json        models, packages, theme, and TUI settings
+│   └── settings.json        shared Pi settings, packages, and extensions
+├── model-scopes.json        profile-specific Pi enabledModels scopes
 └── profiles.sh              account selection and profile synchronization
 ```
+
+`profiles.sh` selects the private `auth.json` for each profile and links every
+other resource to `agent/`. It reads `model-scopes.json` and passes the selected
+profile's `enabledModels` list to Pi through `--models`. Keep profile-specific
+billing and availability policy in `model-scopes.json`; keep all shared workflow
+settings and package declarations in `agent/settings.json`.
 
 Skills are installed at `~/.agents/skills/` from the root `skills-lock.json`.
 See the repository root `README.md` for installation and maintenance.

@@ -58,8 +58,8 @@ else
   echo "    Install with: brew install pi-coding-agent   (then re-run this script)"
 fi
 
-# --- 6. pi profiles (auth-only account isolation) ----------------------------
-# Build thin per-account config dirs that share everything except auth.json.
+# --- 6. pi profiles ----------------------------------------------------------
+# Build per-account config dirs with separate credentials and shared resources.
 # The existing ~/.pi/agent/auth.json (if any) becomes the "work" profile.
 if [ -f "$HOME/.pi/profiles.sh" ]; then
   echo "==> Setting up pi profiles (work, personal) ..."

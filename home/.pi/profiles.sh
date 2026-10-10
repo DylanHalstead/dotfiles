@@ -1,10 +1,9 @@
-# pi profiles — auth-only isolation across accounts (work, personal, ...).
+# pi profiles — separate account credentials with shared Pi resources.
 #
-# Each profile is a thin config dir under ~/.pi/profiles/<name> that symlinks
-# every shared file from the canonical agent dir (~/.pi/agent) EXCEPT auth.json,
-# which is a real per-profile file. Flipping PI_CODING_AGENT_DIR therefore swaps
-# only the credentials; settings, extensions, skills, prompts, and permissions
-# stay shared. See ~/.pi/agent docs: PI_CODING_AGENT_DIR overrides the config dir.
+# Each profile is a thin config dir under ~/.pi/profiles/<name>. auth.json is
+# always per-profile; every other agent resource symlinks to ~/.pi/agent.
+# model-scopes.json owns the Pi enabledModels scope for each profile. See Pi's
+# PI_CODING_AGENT_DIR and --models documentation.
 #
 # Usage:
 #   pi                     # default profile (PI_PROFILE, or "work")
@@ -44,6 +43,31 @@ _pi_profile_sync() {
   done
 }
 
+# _pi_profile_model_scope <name>: print the profile's comma-separated Pi model
+# scope. The JSON mirrors Pi's enabledModels setting so model policy stays data.
+_pi_profile_model_scope() {
+  _pi_profile_validate "${1:-}" || return
+  local _ppms_file="${PI_PROFILES_DIR%/*}/model-scopes.json"
+  [ -f "$_ppms_file" ] || { echo "pi profile: model scopes file not found: $_ppms_file" >&2; return 1; }
+  command -v node >/dev/null 2>&1 || { echo "pi profile: node is required to read $_ppms_file" >&2; return 1; }
+  node -e '
+    const [file, profile] = process.argv.slice(1);
+    let scopes;
+    try {
+      scopes = JSON.parse(require("node:fs").readFileSync(file, "utf8"));
+    } catch (error) {
+      console.error(`pi profile: cannot read ${file}: ${error.message}`);
+      process.exit(1);
+    }
+    const models = scopes[profile]?.enabledModels;
+    if (!Array.isArray(models) || models.length === 0 || !models.every((model) => typeof model === "string" && model.length > 0)) {
+      console.error(`pi profile: ${file} needs a non-empty enabledModels array for ${profile}`);
+      process.exit(1);
+    }
+    process.stdout.write(models.join(","));
+  ' "$_ppms_file" "$1"
+}
+
 # Initialize the standard accounts without replacing existing credentials.
 pi-profiles-setup() {
   local profile work_auth="$PI_PROFILES_DIR/work/auth.json"
@@ -64,7 +88,7 @@ pi() {
     command pi "$@"
     return
   fi
-  local _pi_profile="${PI_PROFILE:-work}" _pi_dir _pi_rc=0
+  local _pi_profile="${PI_PROFILE:-work}" _pi_dir _pi_rc=0 _pi_scope
   if [ "${1:-}" = "-p" ] || [ "${1:-}" = "--profile" ]; then
     [ "$#" -ge 2 ] || { echo "usage: pi --profile <name> [args...]" >&2; return 2; }
     _pi_profile="$2"
@@ -72,8 +96,9 @@ pi() {
   fi
   _pi_profile_validate "$_pi_profile" || return
   _pi_dir="$PI_PROFILES_DIR/$_pi_profile"
-  [ -d "$_pi_dir" ] || _pi_profile_sync "$_pi_profile" || return
-  PI_CODING_AGENT_DIR="$_pi_dir" command pi "$@" || _pi_rc=$?
+  _pi_profile_sync "$_pi_profile" || return
+  _pi_scope=$(_pi_profile_model_scope "$_pi_profile") || return
+  PI_CODING_AGENT_DIR="$_pi_dir" command pi --models "$_pi_scope" "$@" || _pi_rc=$?
   return "$_pi_rc"
 }
 

@@ -1,9 +1,5 @@
-# pi profiles — separate account credentials with shared Pi resources.
-#
-# Each profile is a thin config dir under ~/.pi/profiles/<name>. auth.json is
-# always per-profile; every other agent resource symlinks to ~/.pi/agent.
-# model-scopes.json owns the Pi enabledModels scope for each profile. See Pi's
-# PI_CODING_AGENT_DIR and --models documentation.
+# Pi profiles keep credentials separate while sharing one Pi installation.
+# model-scopes.json owns each profile's enabledModels scope.
 #
 # Usage:
 #   pi                     # default profile (PI_PROFILE, or "work")
@@ -20,7 +16,6 @@
 : "${PI_PROFILES_DIR:=$HOME/.pi/profiles}"
 export PI_AGENT_DIR PI_PROFILES_DIR
 
-# Profile names identify direct children of PI_PROFILES_DIR.
 _pi_profile_validate() {
   case "${1:-}" in
     ''|[!a-zA-Z0-9]*|*[!a-zA-Z0-9_-]*)
@@ -30,8 +25,7 @@ _pi_profile_validate() {
   esac
 }
 
-# _pi_profile_sync <name>: build/refresh the profile dir. Symlinks every shared
-# entry from the agent dir except auth.json; never touches an existing auth.json.
+# Preserve profile credentials while refreshing links to shared resources.
 _pi_profile_sync() {
   _pi_profile_validate "${1:-}" || return
   local _pps_dir _pps_entry
@@ -43,8 +37,7 @@ _pi_profile_sync() {
   done
 }
 
-# _pi_profile_model_scope <name>: print the profile's comma-separated Pi model
-# scope. The JSON mirrors Pi's enabledModels setting so model policy stays data.
+# Keep model policy in JSON while Pi receives its native comma-separated scope.
 _pi_profile_model_scope() {
   _pi_profile_validate "${1:-}" || return
   local _ppms_file="${PI_PROFILES_DIR%/*}/model-scopes.json"
@@ -68,7 +61,7 @@ _pi_profile_model_scope() {
   ' "$_ppms_file" "$1"
 }
 
-# Initialize the standard accounts without replacing existing credentials.
+# Copy existing credentials to work only when work has none.
 pi-profiles-setup() {
   local profile work_auth="$PI_PROFILES_DIR/work/auth.json"
   for profile in work personal; do
@@ -82,7 +75,6 @@ pi-profiles-setup() {
   echo "    Personal account: run  pi -p personal  then /login"
 }
 
-# pi: wrapper that selects a profile config dir before delegating to real pi.
 pi() {
   if [ -n "${PI_CODING_AGENT_DIR:-}" ]; then
     command pi "$@"
@@ -102,7 +94,6 @@ pi() {
   return "$_pi_rc"
 }
 
-# pi-profile <name>: create/refresh a profile, then log in if it has no auth yet.
 pi-profile() {
   [ "$#" -eq 1 ] || { echo "usage: pi-profile <name>" >&2; return 2; }
   _pi_profile_sync "$1" || return

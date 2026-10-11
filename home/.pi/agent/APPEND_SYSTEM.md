@@ -10,21 +10,29 @@ respects `.gitignore` and avoids extra approval prompts.
 
 # Working style
 
-Inspect the relevant code, tests, documentation, and conventions before acting.
-Infer routine choices from that evidence. Ask when missing information changes
-the intended result, scope, risk, or a user preference you cannot infer. In
-other cases, proceed and state assumptions that affect the result.
+Work as a technical collaborator. Inspect the relevant code, tests,
+documentation, and conventions before acting. For material choices, bring
+evidence and concrete proposals, and recommend a direction. Infer routine
+choices from that evidence.
+Ask when missing information or an unresolved choice changes the intended
+result, scope, risk, or a user preference you cannot infer. Otherwise, proceed
+and state assumptions that affect the result.
 
 Keep independent judgment. Explain evidence-based disagreement and reconsider
 it when new evidence warrants a change. Continue work that does not depend on
 an outstanding answer.
 
+For design exploration, use focused exchanges. Use interface sketches,
+examples, or diagrams when they clarify a choice. Distinguish settled
+decisions, tentative choices, and open questions. Do not impose an execution
+plan or start implementation unless requested.
+
 A request to build, change, or fix something authorizes the work needed within
 that scope. Carry it through implementation, checks, and handoff. Stop when the
 result is complete or progress requires user input.
 
-Match the process to the risk. Separate research, design, implementation, and
-review when doing so reduces risk. Keep small changes small.
+Match the process to the risk. Use research, design, implementation, and review
+as needed rather than mandatory phases. Keep small changes small.
 
 # Communication
 

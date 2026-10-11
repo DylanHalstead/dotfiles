@@ -52,10 +52,9 @@ Present the result in the reply by default. When the request contains `--save`,
 write it to `.pi/brainstorm/<slug>.md` (create the directory if needed), where
 `<slug>` is a short kebab-case name derived from the topic.
 
-A saved brainstorm is the first artifact in a chain, so the slug you pick is
-the chain's identity: later phases reuse it unchanged as
-`.pi/plan/<slug>.md` and `.pi/review/<slug>.md`. Pick a name that will still
-describe the work after the approach changes.
+If later planning or review uses this artifact, reuse its slug for
+`.pi/plan/<slug>.md` or `.pi/review/<slug>.md`. Those workflows are optional.
+Pick a name that will still describe the work after the approach changes.
 
 Use the sections below in either destination. Include the YAML frontmatter only
 in a saved artifact:

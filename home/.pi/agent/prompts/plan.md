@@ -1,6 +1,6 @@
 ---
-description: Decompose a brainstorm doc or a request into atomic, hand-off-able steps
-argument-hint: "<brainstorm-file-or-request>"
+description: Turn an agreed design or scoped request into atomic execution steps
+argument-hint: "<design-file-or-request>"
 ---
 Produce the smallest execution map a fresh engineer can follow using only the
 plan and repository. The source owns behavior and rationale; the plan owns
@@ -37,10 +37,10 @@ search, and run read-only commands freely.
    session.
 3. Explore: read the affected files, trace the code paths the change touches,
    and inspect enough comparable code to establish the local conventions.
-4. Resolve material design choices. Compare another viable approach when one
-   exists. If constraints or prior research leave one approach, name what
-   eliminated the alternatives instead of manufacturing another design. Prefer
-   the option that removes the most complexity.
+4. If material design choices remain unresolved, investigate and discuss them
+   with the user before writing the plan. Otherwise, plan directly from the
+   agreed design or sufficiently scoped request. Do not require a separate
+   design session.
 5. Decompose into steps. Prefer narrow vertical slices that leave the repository
    coherent over separate layer-by-layer tasks. For a wide migration that
    cannot land as vertical slices, use expand-contract: add the new form,
@@ -54,15 +54,15 @@ mood, ≤50 characters, no "and". A step whose subject needs "and" is two steps.
 ## Output
 
 Write the plan to `.pi/plan/<slug>.md` (create the directory if needed), where
-`<slug>` is a short kebab-case name. When planning from a brainstorm doc,
-reuse that doc's slug unchanged — the slug is what chains the artifacts
-together. Structure it exactly like this:
+`<slug>` is a short kebab-case name. When planning from an existing design or
+brainstorm artifact, reuse its slug if it has one. Structure it exactly like
+this:
 
 ```markdown
 ---
 phase: plan
 slug: <slug>
-source: <brainstorm artifact path, or "none">
+source: <design or brainstorm artifact path, or "none">
 date: <YYYY-MM-DD>
 skills: <repo skills you loaded, or "none">
 ---

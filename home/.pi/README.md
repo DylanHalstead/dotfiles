@@ -47,6 +47,20 @@ global files free of repository-specific facts.
 Instructions guide model behavior. Rules that must hold belong in permissions,
 the sandbox, or an extension that enforces them.
 
+## Workflows
+
+Collaboration is the default working style in `APPEND_SYSTEM.md`. Prompt
+templates are optional entry points, not a required sequence:
+
+- `/design`: work through a design in conversation; save notes only when asked.
+- `/brainstorm`: research alternatives and recommend an approach.
+- `/plan`: turn an agreed design or scoped request into execution steps.
+- `/implement`: implement a plan or a scoped request without requiring a plan.
+- `/review`: inspect changes or existing code and report findings.
+- `/refactor`: improve structure while preserving behavior.
+
+The engineering standard owns routing to companion and repository skills.
+
 ## Maintenance
 
 Keep each decision in one place and link to its owner instead of copying it.

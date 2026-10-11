@@ -27,6 +27,12 @@ to this task.
 
 ## Plan-mode loop
 
+When resuming, reconcile the first unchecked step against current code and
+relevant commits before editing. If the complete step is already committed
+and still satisfies its contract, rerun its Verify and save its checked box
+instead of repeating the implementation or commit. A matching commit subject
+alone is not proof; finish and verify partial work through the normal loop.
+
 In plan mode, for each unchecked step, in order:
 
 1. Re-read the step, inspect its named files and affected callers, and verify

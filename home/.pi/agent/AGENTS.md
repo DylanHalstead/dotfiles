@@ -29,10 +29,21 @@ that owns it. Report deliberate omissions with the completed work.
 
 # Context independence
 
-Write code and durable artifacts for a reader who has no access to the prompt,
-plan, conversation, or review. Use names and comments for lasting domain
-rationale rather than edit history. Remove unshipped intermediate APIs and
-update their callers instead of adding compatibility layers.
+Distill the conversation into lasting requirements, contracts, and rationale.
+Write code, tests, and documentation for a reader without access to the session;
+preserve what they need to understand the system, not how we arrived there.
+
+Keep specific examples and regression cases when they clarify or protect real
+behavior. Do not encode incidental session details as requirements or duplicate
+coverage around the latest example.
+
+Add or update comments and documentation when readers need public API or usage
+guidance, a non-obvious contract or design decision, or a correction to guidance
+affected by the change. Keep them concise and at the owning boundary. Leave
+debugging history, repeated explanations, and fix summaries in the handoff.
+
+Remove unshipped intermediate APIs and update their callers instead of adding
+compatibility layers.
 
 # Commit messages
 

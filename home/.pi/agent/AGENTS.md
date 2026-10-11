@@ -9,20 +9,13 @@ Minimalism applies to the solution, never to safety (keep validation, error
 handling, security, accessibility) and never to reading. Understand the
 problem before choosing a rung.
 
-# Software design
+# Engineering guidance
 
-Apply John Ousterhout's *A Philosophy of Software Design* (APOSD) as the
-default lens across design, implementation, and review. Optimize for lower
-long-term complexity, measured as change amplification, cognitive load, and
-unknown unknowns.
+For software work, read `~/.agents/skills/engineering-standard/SKILL.md` in full
+and follow its conditions for loading specialized skills.
 
-Prefer deep modules: simple interfaces that hide substantial implementation
-complexity. Keep each design decision in one place, pull complexity down into
-the module that owns it, and avoid layers that only forward calls. Design for
-reading and change. Treat implementation length as secondary. The guidance is
-enough for local changes. For substantial feature work, structural refactors,
-or changes to modules, APIs, abstractions, or architecture, read
-`~/.agents/skills/software-design-philosophy/SKILL.md` in full.
+Use John Ousterhout's *A Philosophy of Software Design* (APOSD) as the default
+design lens. Prefer lower long-term complexity over shorter implementations.
 
 # Scope discipline
 

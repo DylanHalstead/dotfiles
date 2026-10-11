@@ -29,12 +29,8 @@ search, and run read-only commands freely.
 ## Process
 
 1. Read `~/.agents/skills/engineering-standard/SKILL.md` in full. Follow its
-   instructions to identify and load every repository skill that matches this
-   task before designing anything. For substantial feature work, structural
-   refactors, or material API, module, abstraction, or architecture decisions,
-   also read `~/.agents/skills/software-design-philosophy/SKILL.md` in full.
-   When business invariants or domain boundaries are central, also read
-   `~/.agents/skills/domain-driven-design/SKILL.md` in full.
+   routing instructions to load the companion and repository skills relevant
+   to this task.
 2. Understand the requirements. Ask clarifying questions before planning if
    the request is ambiguous. Ask at any point in the process, not only at the
    start; a wrong assumption is cheaper to fix now than in the executor's

@@ -19,15 +19,10 @@ approaches, not building one. Write an artifact only when the request contains
 ## How to research
 
 1. Read `~/.agents/skills/engineering-standard/SKILL.md` in full. Follow its
-   instructions to identify and load every repository skill that matches this
-   task. For substantial feature work, structural refactors, or material API,
-   module, abstraction, or architecture decisions, also read
-   `~/.agents/skills/software-design-philosophy/SKILL.md` in full. When
-   business invariants or domain boundaries are central, also read
-   `~/.agents/skills/domain-driven-design/SKILL.md` in full. The code quality
-   bars do not require critiquing implementations you have not decided to
-   build. Understand the request, and ask clarifying questions before
-   researching if the goal is ambiguous.
+   routing instructions to load the companion and repository skills relevant
+   to this task. The code quality bars do not require critiquing implementations
+   you have not decided to build. Understand the request, and ask clarifying
+   questions before researching if the goal is ambiguous.
 2. Search the codebase efficiently: escalate `find` → `grep` → `read` rather
    than reading whole trees, and issue independent searches in parallel. Stop
    searching when you can name the constraint you were looking for.

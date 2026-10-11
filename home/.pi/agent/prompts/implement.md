@@ -22,12 +22,8 @@ First, decide which mode applies:
   that blocks you.
 
 Then read `~/.agents/skills/engineering-standard/SKILL.md` in full. Follow
-its instructions to identify and load every repository skill that matches this
-task. For substantial feature work, structural refactors, or material API,
-module, abstraction, or architecture changes, also read
-`~/.agents/skills/software-design-philosophy/SKILL.md` in full. When business
-invariants or domain boundaries are central, also read
-`~/.agents/skills/domain-driven-design/SKILL.md` in full.
+its routing instructions to load the companion and repository skills relevant
+to this task.
 
 ## Plan-mode loop
 

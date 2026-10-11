@@ -8,7 +8,7 @@ The `home/` directory mirrors `$HOME`.
 - Shell: Zsh, ohmyzsh, Bash, Powerlevel10k, and fzf.
 - Development: Git, GitHub CLI, mise, Neovim, and tmux.
 - [Pi](home/.pi/README.md): prompts, extensions, permissions, and account profiles.
-- [Agent skills](https://github.com/DylanHalstead/skills): pinned in `skills-lock.json` and installed at `~/.agents/skills/`.
+- [Agent skills](https://github.com/DylanHalstead/skills): `skills-lock.json` is the portable source of truth; generated copies install at `~/.agents/skills/`. Manage skills from this repository without `--global`.
 
 ## Install
 

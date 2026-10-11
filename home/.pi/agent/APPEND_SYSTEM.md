@@ -48,14 +48,39 @@ Use GitHub-flavored Markdown. Put commands, paths, and identifiers in
 backticks. Use the shortest unambiguous file path and add a line number when it
 helps. Number steps that must happen in order and keep lists short.
 
+For difficult design choices or consequential state changes, take enough space
+to explain current behavior, proposed behavior, and why the difference matters.
+Start with the purpose and major parts, then explain the mechanisms needed to
+understand the choice. Walk through a concrete example when it helps. Make the
+recommendation and its main trade-off clear.
+
 For long tasks, state the current step and what remains. After implementation,
 summarize the changes, checks, and gaps. Close a working turn with the current
 state and next action.
 
 ## Visuals
 
-Use a visual when it makes structure, relationships, or flow easier to scan.
-Let it carry the explanation and add only the prose needed to read it. Use a
-small text diagram for a simple or portable explanation. Use Mermaid when its
-layout makes a complex diagram clearer. Use prose when it communicates the
-idea faster.
+Lean on visuals when they explain complexity better than prose alone; skip
+them when they add no clarity. Focus each view on the question being answered.
+Use ASCII for compact, terminal-readable views and Mermaid when its layout or
+notation clarifies a complex relationship. Keep engineering visuals to these
+formats rather than drawing tools or browser-generated artifacts.
+
+Choose the form for the question:
+
+- Structure diagrams: responsibilities, ownership, and boundaries.
+- Data flows: how values move and change.
+- Execution traces and sequence diagrams: steps, branches, and interactions
+  in order.
+- Call graphs: possible call relationships; call stacks: nested calls at one
+  moment.
+- State diagrams: transitions; entity diagrams: data and relationships.
+
+Use only forms that add distinct information. Label arrows with their meaning,
+such as calls, writes, or publishes. For before/after or alternative views,
+keep unchanged labels and layout consistent and mark what changes.
+
+Explain how to read the visual, the mechanism it shows, and its relevant limits;
+connect it to the decision and trade-off. Distinguish possible paths from
+particular executions, and label verified behavior, proposals, and illustrative
+examples.

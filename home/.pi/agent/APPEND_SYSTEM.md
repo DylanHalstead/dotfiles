@@ -4,9 +4,9 @@ conventions before this file.
 
 # Tools
 
-Use `read`, `grep`, `find`, and `ls` to inspect files. Reserve `bash` for builds,
-tests, linters, and Git. If a shell command must search files, use `rg`; it
-respects `.gitignore` and avoids extra approval prompts.
+Use `read`, `grep`, `find`, and `ls` to inspect files. Use `bash` for builds,
+tests, linters, Git, and task-specific CLIs. If a shell command must search
+files, use `rg`; it respects `.gitignore` and avoids extra approval prompts.
 
 # Working style
 

@@ -3,31 +3,31 @@
   "skills": {
     "domain-driven-design": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/domain-driven-design/SKILL.md",
       "computedHash": "13f919b0eb0d76496d61e47d009dab50025d06cf533a4cacd1be31451b0d2c2f"
     },
     "engineering-standard": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/engineering-standard/SKILL.md",
-      "computedHash": "a659b63047faf5283d6ee2ee39e3ada97c3ed5beb65ef6d7cb136dce52618a4d"
+      "computedHash": "e398280db852e85f1e12b6db99bdf0b953891605d8e65a385bfc31b49cc7085c"
     },
     "frontend-development": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/frontend-development/SKILL.md",
-      "computedHash": "e45e31319ec03daabe150972212fc08377cbd0fc432e4565000acbdee5007bc9"
+      "computedHash": "7756e9396f162f7794fbef1f5db44cc59165649d31c9a288dda761b128aa37dd"
     },
     "go-development": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/go-development/SKILL.md",
-      "computedHash": "2e9d0243e08226c2ac60620b010df4a5583fb71fdb3fb62c76228c6b426e2dc8"
+      "computedHash": "e834600df8f48443d126bc78926454775339550df5960ae27c8e1eaba058a841"
     },
     "humanizer": {
       "source": "blader/humanizer",
@@ -52,38 +52,38 @@
     },
     "pr-description": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/pr-description/SKILL.md",
-      "computedHash": "bb602901eb1e6da6ec897e10245f020350d1de70c878d6bf83c30163f7b8bccd"
+      "computedHash": "a77d5f3ed86f889f1ebded5fd6c5ceec67a5a40d63076c57ac7604a066b56b83"
     },
     "ruby-development": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/ruby-development/SKILL.md",
       "computedHash": "1225605459da9cb70bf4c7f140d26f1158ea2e3c35a3cfb9a4b185c99e63a356"
     },
     "skill-creator": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/skill-creator/SKILL.md",
       "computedHash": "669e3bb9efc29c76966dfa3346252603ca7921415585ab2ae1efe4256263d02a"
     },
     "software-design-philosophy": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/software-design-philosophy/SKILL.md",
-      "computedHash": "076a9655bba4e239ec8411026943c66d90ba7ae2c4ac61b8e53aed0e6fec3246"
+      "computedHash": "7b01ad4f781885a4e8ae9d9624582f40ae8a9462081b327e04d46acf7e5ccad3"
     },
     "user-interface-design": {
       "source": "DylanHalstead/skills",
-      "ref": "46e427a950e93bad83ed70fb6d9cac6262212826",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
       "sourceType": "github",
       "skillPath": "skills/user-interface-design/SKILL.md",
-      "computedHash": "c56d28e413a34688298f241ddab30820d4ed02824ffb5f406b79d2e24865f9a8"
+      "computedHash": "f814226d3be6e9e125fa13a935beb87922ffeed603743763e9981911f9ffd617"
     },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
@@ -91,6 +91,13 @@
       "sourceType": "github",
       "skillPath": "skills/react-best-practices/SKILL.md",
       "computedHash": "3219a1944e404ffc14d1d9d6aef6dd2e3855b81387ee0a044ccbfe14d34c2357"
+    },
+    "visual-design": {
+      "source": "DylanHalstead/skills",
+      "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",
+      "sourceType": "github",
+      "skillPath": "skills/visual-design/SKILL.md",
+      "computedHash": "9c2166d122ea2147da8e9be9571cbe2cc20764a5c82cb7675f98d178925aa487"
     }
   }
 }

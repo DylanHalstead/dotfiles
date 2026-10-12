@@ -42,7 +42,7 @@ stow -t "$HOME" -v home
 # .agents/skills and are exposed globally through the stowed ~/.agents/skills.
 if command -v npx >/dev/null 2>&1; then
   echo "==> Restoring agent skills from skills-lock.json ..."
-  (cd "$DOTFILES_DIR" && npx --yes skills@1.7.0 experimental_install)
+  (cd "$DOTFILES_DIR" && npx --yes skills@1.7.2 experimental_install)
 else
   echo "==> npx not found, skipping agent skill restore."
 fi

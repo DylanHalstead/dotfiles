@@ -1,9 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import {
-	type AutocompleteItem,
-	type AutocompleteProvider,
-	fuzzyFilter,
-} from "@earendil-works/pi-tui";
+import { type AutocompleteProvider, fuzzyFilter } from "@earendil-works/pi-tui";
 
 const INLINE_SKILL = /(^|\s)\$([a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?)(?=$|[^a-z0-9-])/g;
 const INLINE_SKILL_PREFIX = /(?:^|\s)(\$[^\s$]*)$/;
@@ -11,16 +7,13 @@ const INLINE_SKILL_PREFIX = /(?:^|\s)(\$[^\s$]*)$/;
 const FILE_REFERENCE_SEPARATOR = /(?:\s|(?=\p{Punctuation})[\p{Script_Extensions=Han}\p{Script_Extensions=Hiragana}\p{Script_Extensions=Katakana}\p{Script_Extensions=Hangul}\p{Script_Extensions=Bopomofo}]|[，．：；！？（）［］｛｝“”‘’…—])/u;
 
 function getSkills(pi: ExtensionAPI) {
-	return pi.getCommands().filter((command) => command.source === "skill");
-}
-
-function createSkillItem(command: ReturnType<ExtensionAPI["getCommands"]>[number]): AutocompleteItem {
-	const name = command.name.slice("skill:".length);
-	return {
-		value: `$${name}`,
-		label: name,
-		description: command.description,
-	};
+	return pi.getCommands()
+		.filter((command) => command.source === "skill")
+		.map((command) => ({
+			name: command.name.slice("skill:".length),
+			path: command.sourceInfo.path,
+			description: command.description,
+		}));
 }
 
 function createAutocompleteProvider(pi: ExtensionAPI, current: AutocompleteProvider): AutocompleteProvider {
@@ -35,9 +28,13 @@ function createAutocompleteProvider(pi: ExtensionAPI, current: AutocompleteProvi
 
 			const prefix = match[1];
 			const query = prefix.slice(1);
-			const items = fuzzyFilter(getSkills(pi), query, (command) =>
-				command.name.slice("skill:".length),
-			).map(createSkillItem);
+			const items = fuzzyFilter(getSkills(pi), query, (skill) => skill.name).map(
+				({ name, description }) => ({
+					value: `$${name}`,
+					label: name,
+					...(description === undefined ? {} : { description }),
+				}),
+			);
 
 			return items.length > 0 ? { items, prefix } : null;
 		},
@@ -73,11 +70,11 @@ export default function inlineSkillsExtension(pi: ExtensionAPI): void {
 	});
 
 	pi.on("input", (event) => {
-		const skills = new Map(getSkills(pi).map((command) => [command.name.slice("skill:".length), command]));
+		const skills = new Map(getSkills(pi).map((skill) => [skill.name, skill]));
 		const text = event.text.replace(INLINE_SKILL, (reference, leadingWhitespace, name) => {
 			const skill = skills.get(name);
 			if (!skill) return reference;
-			const path = skill.sourceInfo.path;
+			const path = skill.path;
 			const fileReference = FILE_REFERENCE_SEPARATOR.test(path) ? `@"${path}"` : `@${path}`;
 			return `${leadingWhitespace}${fileReference}`;
 		});

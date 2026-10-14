@@ -32,9 +32,10 @@ local. The extension collection is not a runtime framework.
 - Ship TypeScript Pi entrypoints without a bundled `dist/` artifact.
   Compiled JavaScript/declarations become necessary only for ordinary library
   exports.
-- Colocate `*.test.ts` beside source files; exclude tests from published
-  tarballs. Each package owns its manifest, version, source, tests, README,
-  and license.
+- Colocate package `*.test.ts` files beside source. Cross-extension tests belong
+  to the workspace `tests/` directory, with shared factories in `tests/fixtures/`,
+  not `__mocks__`. Exclude tests from published tarballs. Each package owns its
+  manifest, version, source, tests, README, and license.
 - Declare host-provided Pi modules as `*` peers and pin development copies
   at the workspace root. Document the tested Pi version rather than claiming
   every host release is supported.

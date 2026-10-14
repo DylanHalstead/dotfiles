@@ -61,6 +61,12 @@ templates are optional entry points, not a required sequence:
 
 The engineering standard owns routing to companion and repository skills.
 
+The inline-skills extension completes `$skill-name` mentions and replaces them
+with JSON-quoted `@"/absolute/path/to/SKILL.md"` references on submission. It does
+not read or inject skill instructions; the model decides whether to read the
+referenced file. Use Pi's native `/skill:name` command at the start of a prompt
+when you want its instructions loaded explicitly.
+
 ## Maintenance
 
 Keep each decision in one place and link to its owner instead of copying it.

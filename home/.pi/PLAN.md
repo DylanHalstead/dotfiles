@@ -8,8 +8,8 @@ with a local checkout at `/Users/dylan/repos/pi-extensions`.
 
 Publish independently installable npm packages:
 
-- `@dylanhalstead/pi-inline-skills`: autocomplete and expand `$skill-name`
-  references to already-loaded Pi skills.
+- `@dylanhalstead/pi-inline-skills`: autocomplete `$skill-name` mentions and
+  replace them with file references to discovered Pi skills.
 - `@dylanhalstead/pi-model-switch-guard`: confirm the first interactive prompt
   after a mid-session model switch, with `/model-undo` and `ctrl+alt+m`.
 
@@ -56,17 +56,18 @@ Each extension README owns its public contract.
 
 ### Inline skills
 
-Preserve loaded-skill discovery, shorthand completion, multiline expansion, and
-user transcript rendering. Preserve the wrapped autocomplete provider's triggers
-and non-skill behavior.
+Preserve discovered-skill lookup, shorthand completion, multiline substitution,
+and the wrapped autocomplete provider's triggers and non-skill behavior.
 
-Malformed word-like suffixes must not expand a shorter valid prefix. Escape
-source-path attributes. If any skill file read fails, leave the entire input
-unchanged and report the error through UI or stderr without blocking submission.
+Replace known `$name` mentions with JSON-quoted `@"/absolute/path/to/SKILL.md"`
+references without reading or injecting instructions. Preserve surrounding text,
+punctuation, and images. Do not hide the resulting references in the transcript.
+Malformed word-like suffixes must not match a shorter valid prefix.
 
-TUI autocomplete is terminal-only; input expansion remains available in other
-modes. Expanded content and source paths enter the prompt and transcript.
-This is not a separate skill loader or trust system.
+The model decides whether to read and use a referenced skill. Pi's native
+`/skill:name` remains the explicit loading mechanism. TUI autocomplete is
+terminal-only; reference substitution remains available in other modes. Source
+paths enter the prompt and transcript. This is not a skill loader or trust system.
 
 ### Model switch guard
 
@@ -82,7 +83,7 @@ must not wait for dialogs, consume input, or change models.
 
 Pi passes input transformations to later handlers without exposing the original
 pre-transformation text. Model guard restores the text it receives: shorthand
-if loaded first, expanded content if inline skills runs earlier. Test both
+if loaded first, file references if inline skills runs earlier. Test both
 orders without coupling the packages. Pi's editor API cannot restore image
 attachments; declining must warn the user to reattach them.
 

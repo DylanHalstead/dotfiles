@@ -59,8 +59,9 @@ Each extension README owns its public contract.
 Preserve discovered-skill lookup, shorthand completion, multiline substitution,
 and the wrapped autocomplete provider's triggers and non-skill behavior.
 
-Replace known `$name` mentions with JSON-quoted `@"/absolute/path/to/SKILL.md"`
-references without reading or injecting instructions. Preserve surrounding text,
+Replace known `$name` mentions with `@/absolute/path/to/SKILL.md` references
+without reading or injecting instructions. Match Pi file-completion quoting for
+paths containing whitespace or Unicode separators. Preserve surrounding text,
 punctuation, and images. Do not hide the resulting references in the transcript.
 Malformed word-like suffixes must not match a shorter valid prefix.
 

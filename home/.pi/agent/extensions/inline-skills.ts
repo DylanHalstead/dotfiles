@@ -7,6 +7,8 @@ import {
 
 const INLINE_SKILL = /(^|\s)\$([a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?)(?=$|[^a-z0-9-])/g;
 const INLINE_SKILL_PREFIX = /(?:^|\s)(\$[^\s$]*)$/;
+// Match Pi file completion; its separator regex and formatter are not public exports.
+const FILE_REFERENCE_SEPARATOR = /(?:\s|(?=\p{Punctuation})[\p{Script_Extensions=Han}\p{Script_Extensions=Hiragana}\p{Script_Extensions=Katakana}\p{Script_Extensions=Hangul}\p{Script_Extensions=Bopomofo}]|[，．：；！？（）［］｛｝“”‘’…—])/u;
 
 function getSkills(pi: ExtensionAPI) {
 	return pi.getCommands().filter((command) => command.source === "skill");
@@ -74,7 +76,10 @@ export default function inlineSkillsExtension(pi: ExtensionAPI): void {
 		const skills = new Map(getSkills(pi).map((command) => [command.name.slice("skill:".length), command]));
 		const text = event.text.replace(INLINE_SKILL, (reference, leadingWhitespace, name) => {
 			const skill = skills.get(name);
-			return skill ? `${leadingWhitespace}@${JSON.stringify(skill.sourceInfo.path)}` : reference;
+			if (!skill) return reference;
+			const path = skill.sourceInfo.path;
+			const fileReference = FILE_REFERENCE_SEPARATOR.test(path) ? `@"${path}"` : `@${path}`;
+			return `${leadingWhitespace}${fileReference}`;
 		});
 
 		return text === event.text ? { action: "continue" } : { action: "transform", text, images: event.images };

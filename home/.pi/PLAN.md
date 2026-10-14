@@ -36,7 +36,9 @@ local. The extension collection is not a runtime framework.
   contract independently. Shared factories live in `tests/fixtures/`, not
   `__mocks__`; they do not reproduce Pi's input dispatcher. Exclude tests from
   published tarballs. Each package owns its manifest, version, source, tests,
-  README, and license.
+  and README. Maintain one root MIT `LICENSE`; pnpm packs the notice into each
+  workspace package automatically. Publish those tarballs with npm, not package
+  directories. Validate the packed notice against the root file.
 - Declare host-provided Pi modules as `*` peers and pin development copies
   at the workspace root. Document the tested Pi version rather than claiming
   every host release is supported.
@@ -128,7 +130,7 @@ image attachments; declining must warn the user to reattach them.
 
 - Reproducible pnpm installation and green GitHub CI.
 - Independent npm packages with Pi manifests, source-only tarballs, colocated
-  tests, READMEs, licenses, and isolated loading checks.
+  tests, READMEs, the inherited root MIT notice, and isolated loading checks.
 - Real TUI integration verified before release.
 - npm installation and Pi gallery discovery verified for each package.
 - Subsequent releases use package-qualified tags, protected GitHub environments,

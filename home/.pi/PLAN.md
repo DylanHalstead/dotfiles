@@ -32,10 +32,11 @@ local. The extension collection is not a runtime framework.
 - Ship TypeScript Pi entrypoints without a bundled `dist/` artifact.
   Compiled JavaScript/declarations become necessary only for ordinary library
   exports.
-- Colocate package `*.test.ts` files beside source. Cross-extension tests belong
-  to the workspace `tests/` directory, with shared factories in `tests/fixtures/`,
-  not `__mocks__`. Exclude tests from published tarballs. Each package owns its
-  manifest, version, source, tests, README, and license.
+- Colocate package `*.test.ts` files beside source and test each extension's
+  contract independently. Shared factories live in `tests/fixtures/`, not
+  `__mocks__`; they do not reproduce Pi's input dispatcher. Exclude tests from
+  published tarballs. Each package owns its manifest, version, source, tests,
+  README, and license.
 - Declare host-provided Pi modules as `*` peers and pin development copies
   at the workspace root. Document the tested Pi version rather than claiming
   every host release is supported.
@@ -85,9 +86,11 @@ must not wait for dialogs, consume input, or change models.
 
 Pi passes input transformations to later handlers without exposing the original
 pre-transformation text. Model guard restores the text it receives: shorthand
-if loaded first, file references if inline skills runs earlier. Test both
-orders without coupling the packages. Pi's editor API cannot restore image
-attachments; declining must warn the user to reattach them.
+if loaded first, transformed text if other handlers run earlier. Configure the
+guard before input-transforming extensions to preserve original editor text;
+Pi 1.1.0 has no package-declared handler priority. Verify loading order in real
+Pi rather than a simulated cross-extension chain. Pi's editor API cannot restore
+image attachments; declining must warn the user to reattach them.
 
 ## Implementation and migration gates
 
@@ -99,7 +102,7 @@ attachments; declining must warn the user to reattach them.
 2. **Validate real Pi behavior.**
    Use a disposable agent directory to avoid duplicate local loading. Verify
    terminal autocomplete and completion delegation, model dialogs, undo,
-   restoration failures, session navigation, both package orders, and image
+   restoration failures, session navigation, guard-first loading, and image
    warnings. Automated registration tests do not replace these TUI checks.
 
 3. **Publish.**

@@ -26,5 +26,5 @@ In tmux, press `prefix + I` to install plugins. Neovim installs its plugins on f
 ## Usage
 
 - Run `pi` for the work account or `pi -p personal` for the personal account.
-- Pi runs tools on the host with the OS sandbox disabled by default.
+- Pi runs tools on the host without an OS sandbox; permissions and local guardrails remain active.
 - Run `stow -R -t "$HOME" home` from this repository to relink configuration.

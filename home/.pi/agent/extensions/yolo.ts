@@ -12,7 +12,7 @@
  * The trusted-development policy already allows routine work. This switch is
  * retained for sessions that also want to auto-approve the remaining permission
  * prompts. `guardrails.ts` still blocks secrets and confirms pushes and cloud
- * mutations independently, and an explicitly enabled sandbox still applies.
+ * mutations independently. Tools run on the host without an OS sandbox.
  *
  *   /yolo          Toggle YOLO for this session (press again to turn off)
  *   /yolo on|off   Set it explicitly

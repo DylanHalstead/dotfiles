@@ -13,7 +13,6 @@ installation and profile usage.
 │   ├── AGENTS.md            personal engineering standards
 │   ├── extensions/          runtime behavior and enforced controls
 │   ├── prompts/             user-invoked workflows
-│   ├── sandbox/             OS sandbox policy and its local notes
 │   ├── pi-permissions.jsonc permission policy
 │   └── settings.json        shared Pi settings, packages, and extensions
 ├── model-scopes.json        profile-specific Pi enabledModels scopes
@@ -44,8 +43,8 @@ global files free of repository-specific facts.
 - Add examples after a repeated failure shows that an instruction alone does
   not produce the intended result.
 
-Instructions guide model behavior. Rules that must hold belong in permissions,
-the sandbox, or an extension that enforces them.
+Instructions guide model behavior. Rules that must hold belong in permissions
+or an extension that enforces them. Tools run on the host without an OS sandbox.
 
 ## Workflows
 

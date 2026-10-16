@@ -1,22 +1,12 @@
 /**
  * Guardrails
  *
- * Two policies that must hold even when every other gate is open, and which
- * neither of the other two layers can express:
+ * Tool-call checks that remain active when YOLO auto-approves the permission
+ * system's `ask` rules. Tools run on the host without an OS sandbox; these
+ * pattern-based checks are not process isolation.
  *
- *   1. pi-sandbox (srt) contains the *process*: it decides which paths and
- *      domains exist for a subprocess. It cannot tell `git fetch` from
- *      `git push` — same binary, same host, both inside the network allowlist.
- *   2. pi-permission-system gates *intent*, but `/yolo` auto-approves every
- *      `ask` rule, so nothing routed through "ask" survives YOLO.
- *
- * `tool_call` fires regardless of YOLO and regardless of the sandbox, so this
- * is the only place the two rules below can be guaranteed:
- *
- *   - Secrets are unreadable. Blocks `read` and `bash` that touch credential
- *     files, with a reason that names the alternative (defense in depth with
- *     the sandbox's `denyRead` when sandboxing is enabled — this also covers in-process tool calls
- *     and workspace-local `.env` files that live inside an allowed path).
+ *   - Blocks `read` paths and `bash` text matching credential-file patterns,
+ *     including workspace-local `.env` files, and names a safe alternative.
  *   - `git push` always asks, with a stronger warning for force pushes.
  *   - Cloud mutations always ask; credential-printing commands are blocked.
  *

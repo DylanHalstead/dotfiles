@@ -16,7 +16,6 @@
   "packages": [
     "npm:pi-permission-system",
     "npm:pi-web-access",
-    "npm:@oddsjam/pi-sandbox",
     "npm:@dylanhalstead/pi-model-switch-guard",
     "npm:@dylanhalstead/pi-inline-skills"
   ],

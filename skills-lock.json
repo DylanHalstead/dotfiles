@@ -64,6 +64,13 @@
       "skillPath": "skills/ruby-development/SKILL.md",
       "computedHash": "1225605459da9cb70bf4c7f140d26f1158ea2e3c35a3cfb9a4b185c99e63a356"
     },
+    "sentry-cli": {
+      "source": "cli.sentry.dev",
+      "sourceUrl": "https://cli.sentry.dev",
+      "sourceType": "well-known",
+      "computedHash": "5c4ad508ccc3d980158604271847da68c00f832d02a48688ffcfb342f6888db9",
+      "wellKnownDigest": "sha256:51cf883c6b5bab2e089db992c3f3b999a6b0e50a4df05e5097de9288d6e86b5e"
+    },
     "skill-creator": {
       "source": "DylanHalstead/skills",
       "ref": "afe7087e3c53ad6680acf98e2d0de1099278f745",

@@ -53,13 +53,29 @@
     "external_directory": "ask",
     "external_directory:/tmp/*": "allow",
     "external_directory:/private/tmp/*": "allow",
+    // A trailing /* does not match the directory itself, which tools may
+    // inspect before traversing it.
+    "external_directory:/Users/dylan/repos": "allow",
     "external_directory:/Users/dylan/repos/*": "allow",
+    "external_directory:/Users/dylan/dotfiles": "allow",
     "external_directory:/Users/dylan/dotfiles/*": "allow",
+    "external_directory:/Users/dylan/.pi": "allow",
     "external_directory:/Users/dylan/.pi/*": "allow",
+
+    // mise owns the installed Ruby, Go, and their standard libraries.
+    "external_directory:/Users/dylan/.local/share/mise": "allow",
+    "external_directory:/Users/dylan/.local/share/mise/*": "allow",
+    "external_directory:/home/dylan/repos": "allow",
     "external_directory:/home/dylan/repos/*": "allow",
+    "external_directory:/home/dylan/dotfiles": "allow",
     "external_directory:/home/dylan/dotfiles/*": "allow",
+    "external_directory:/home/dylan/.pi": "allow",
     "external_directory:/home/dylan/.pi/*": "allow",
+    "external_directory:/home/dylan/.local/share/mise": "allow",
+    "external_directory:/home/dylan/.local/share/mise/*": "allow",
+    "external_directory:/opt/homebrew/Cellar/pi-coding-agent": "allow",
     "external_directory:/opt/homebrew/Cellar/pi-coding-agent/*": "allow",
+    "external_directory:/home/linuxbrew/.linuxbrew/Cellar/pi-coding-agent": "allow",
     "external_directory:/home/linuxbrew/.linuxbrew/Cellar/pi-coding-agent/*": "allow"
   }
 }

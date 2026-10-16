@@ -9,3 +9,7 @@ ruby = "4.0.6"
 terraform = "1.16.0"
 tflint = "0.64.0"
 terraform-docs = "0.24.0"
+"go:github.com/Three-Ships/nad" = "latest"
+
+[env]
+GOPRIVATE = "github.com/Three-Ships"

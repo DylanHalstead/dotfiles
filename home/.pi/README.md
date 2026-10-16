@@ -61,6 +61,12 @@ templates are optional entry points, not a required sequence:
 
 The engineering standard owns routing to companion and repository skills.
 
+Inline skills and the model switch guard are installed from the
+[`pi-extensions`](https://github.com/DylanHalstead/pi-extensions) npm packages
+declared in `agent/settings.json`. Keep the model switch guard before inline
+skills so declining a model switch restores the original shorthand text. Do not
+add local copies of these extensions; Pi would load both versions.
+
 The inline-skills extension completes `$skill-name` mentions and replaces them
 with `@/absolute/path/to/SKILL.md` references on submission. It follows Pi's
 file-completion convention, quoting paths containing whitespace or Unicode

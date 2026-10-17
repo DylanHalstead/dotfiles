@@ -1,0 +1,9 @@
+# On macOS this file is ignored unless XDG_CONFIG_HOME points to ~/.config;
+# otherwise pnpm reads ~/Library/Preferences/pnpm/config.yaml.
+
+# Reject mismatches instead of downloading; existing projects may need a matching
+# mise pnpm pin before their install commands will work.
+pmOnFail: error
+
+# Mise also selects runtimes, not pnpm's global command shims.
+globalShims: false

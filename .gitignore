@@ -6,6 +6,11 @@
 **/.claude/settings.local.json
 home/.agents/.skill-lock.json
 
+# Machine-local mise overrides and environment selection
+home/.config/mise/config.local.toml
+home/.config/mise/config.*.local.toml
+home/.config/mise/miserc.local.toml
+
 # Secrets
 home/.zsh_secrets
 home/.config/gh/hosts.yml

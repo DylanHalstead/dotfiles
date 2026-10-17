@@ -1,0 +1,6 @@
+# Select with MISE_ENV=work or `mise -E work exec -- <command>`.
+[tools]
+"go:github.com/Three-Ships/nad" = "0.5.0"
+
+[env]
+GOPRIVATE = "github.com/Three-Ships"

@@ -1,5 +1,7 @@
+# Personal defaults; projects own their toolchain pins.
+# Work machines need the work environment for nad and GOPRIVATE (see config.work.toml).
 [tools]
-bun = "latest"
+bun = "1"
 go = "1.27.2"
 lefthook = "2.2.2"
 node = "26.12.0"
@@ -9,7 +11,3 @@ ruby = "4.0.7"
 terraform = "1.16.6"
 tflint = "0.64.0"
 terraform-docs = "0.24.0"
-"go:github.com/Three-Ships/nad" = "latest"
-
-[env]
-GOPRIVATE = "github.com/Three-Ships"

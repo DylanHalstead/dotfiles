@@ -22,11 +22,6 @@ source $ZSH/oh-my-zsh.sh
 
 source "$HOME/.config/zsh/integrations.zsh"
 
-# mise
-if command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate zsh)"
-fi
-
 [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
 
 # rails macos dev
@@ -69,3 +64,8 @@ alias vi=nvim
 
 # pi profiles — auth-only account switching (see ~/.pi/profiles.sh)
 [ -f ~/.pi/profiles.sh ] && source ~/.pi/profiles.sh
+
+# Activate last so integrations and local overrides cannot shadow managed tools.
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi

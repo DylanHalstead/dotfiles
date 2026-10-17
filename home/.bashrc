@@ -116,14 +116,14 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# mise
-export PATH="$HOME/.local/bin:$PATH"
-if command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate bash)"
-fi
-[ -f "$HOME/.deno/env" ] && . "$HOME/.deno/env"
+. "$HOME/.config/shell/paths.sh"
 PATH=~/.console-ninja/.bin:$PATH
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # pi profiles — auth-only account switching (see ~/.pi/profiles.sh)
 [ -f ~/.pi/profiles.sh ] && source ~/.pi/profiles.sh
+
+# Activate last so integrations and local overrides cannot shadow managed tools.
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash)"
+fi

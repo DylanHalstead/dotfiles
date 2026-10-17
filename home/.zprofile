@@ -8,8 +8,7 @@ elif [[ -x /usr/local/bin/brew ]]; then
 fi
 
 typeset -U path PATH
-path=("$HOME/bin" "$HOME/.local/bin" $path)
-export PATH
+source "$HOME/.config/shell/paths.sh"
 export EDITOR='nvim'
 
 # Google Cloud SDK executables.
@@ -21,4 +20,9 @@ if command -v brew >/dev/null 2>&1; then
     path=("$libpq_prefix/bin" $path)
   fi
   unset libpq_prefix
+fi
+
+# Login commands and non-interactive children need mise without prompt hooks.
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh --shims)"
 fi

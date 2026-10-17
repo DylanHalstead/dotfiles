@@ -12,6 +12,11 @@
 # every other PI_* env var (PI_CODING_AGENT_SESSION_DIR, PI_PACKAGE_DIR,
 # PI_OFFLINE, ...) keeps working untouched.
 
+# Use the terminal clipboard on WSL even when local clipboard helpers fail.
+if [ -n "${WSL_DISTRO_NAME:-}" ]; then
+  export PI_CLIPBOARD_OSC52="${PI_CLIPBOARD_OSC52:-1}"
+fi
+
 : "${PI_AGENT_DIR:=$HOME/.pi/agent}"
 : "${PI_PROFILES_DIR:=$HOME/.pi/profiles}"
 export PI_AGENT_DIR PI_PROFILES_DIR

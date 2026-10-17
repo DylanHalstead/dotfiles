@@ -25,6 +25,9 @@ profile's `enabledModels` list to Pi through `--models`. Keep profile-specific
 billing and availability policy in `model-scopes.json`; keep all shared workflow
 settings and package declarations in `agent/settings.json`.
 
+Synchronization rejects real resource directories in a profile instead of merging
+links into them. Move those directories aside explicitly before retrying.
+
 Skills are installed at `~/.agents/skills/` from the root `skills-lock.json`.
 See the repository root `README.md` for installation and maintenance.
 

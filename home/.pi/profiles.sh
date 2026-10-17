@@ -30,17 +30,24 @@ _pi_profile_validate() {
   esac
 }
 
-# Preserve profile credentials while refreshing links to shared resources.
-_pi_profile_sync() {
+# Refresh shared links without touching credentials or replacing real directories.
+# A subshell confines pipefail and failure exits to this operation.
+_pi_profile_sync() (
+  set -o pipefail
   _pi_profile_validate "${1:-}" || return
-  local _pps_dir _pps_entry
+  local profile_dir resource_path resource_link
   [ -d "$PI_AGENT_DIR" ] || { echo "pi profile: agent directory not found: $PI_AGENT_DIR" >&2; return 1; }
-  _pps_dir="$PI_PROFILES_DIR/$1"
-  mkdir -p "$_pps_dir" || return 1
-  find "$PI_AGENT_DIR" -maxdepth 1 -mindepth 1 ! -name auth.json -print | while IFS= read -r _pps_entry; do
-    ln -sfn "$_pps_entry" "$_pps_dir/${_pps_entry##*/}"
+  profile_dir="$PI_PROFILES_DIR/$1"
+  mkdir -p "$profile_dir" || return 1
+  find -H "$PI_AGENT_DIR" -maxdepth 1 -mindepth 1 ! -name auth.json -print0 | while IFS= read -r -d '' resource_path; do
+    resource_link="$profile_dir/${resource_path##*/}"
+    if [ -d "$resource_link" ] && [ ! -L "$resource_link" ]; then
+      printf 'pi profile: move existing resource directory aside: %s\n' "$resource_link" >&2
+      exit 1
+    fi
+    ln -sfn "$resource_path" "$resource_link" || exit "$?"
   done
-}
+)
 
 # Keep model policy in JSON while Pi receives its native comma-separated scope.
 _pi_profile_model_scope() {

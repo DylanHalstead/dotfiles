@@ -7,7 +7,8 @@
     "enabled": false
   },
   "terminal": {
-    "showImages": true
+    "showImages": true,
+    "trueColor": true
   },
   "markdown": {
     "mermaid": "streaming"

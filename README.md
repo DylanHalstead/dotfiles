@@ -6,7 +6,7 @@ The `home/` directory mirrors `$HOME`.
 ## Configuration
 
 - Shell: Zsh, ohmyzsh, Bash, Powerlevel10k, and fzf.
-- Development: Git, GitHub CLI, mise, Neovim, and tmux.
+- Development: Git, GitHub CLI, mise, Neovim, tmux, and terminal themes.
 - [Pi](home/.pi/README.md): prompts, extensions, permissions, and account profiles.
 - [Agent skills](https://github.com/DylanHalstead/skills): `skills-lock.json` is the portable source of truth; generated copies install at `~/.agents/skills/`. Manage skills from this repository without `--global`.
 
@@ -82,6 +82,23 @@ After changing tool versions, run `mise install && mise reshim` and open a new
 shell. Use `mise doctor` and `command -v node pnpm` to check resolution.
 If release-asset changes break installation, update mise through its original
 installer (`mise self-update` for standalone installs) and retry.
+
+## Terminal themes
+
+The shared Dracula palette lives in
+[`home/.config/alacritty/dracula.toml`](home/.config/alacritty/dracula.toml).
+Stow places it at `~/.config/alacritty/dracula.toml` on Unix-like hosts. Keep
+an Alacritty host configuration limited to its platform-specific launcher and
+font choices, then import the palette:
+
+```toml
+import = ["~/.config/alacritty/dracula.toml"]
+```
+
+Windows Alacritty configuration remains in
+`%APPDATA%\\alacritty\\alacritty.toml`; copy the `[colors]` sections from the
+shared palette into that file. Pi, tmux, Ghostty, and the Alacritty palette use
+Dracula; tmux does not require a theme plugin.
 
 ## WSL terminal and clipboard
 

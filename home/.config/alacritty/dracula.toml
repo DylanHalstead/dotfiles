@@ -1,0 +1,68 @@
+# Portable Dracula palette. Platform-specific launch and font settings belong in
+# the local alacritty.toml, which imports this file.
+
+[colors.primary]
+background = "#282a36"
+foreground = "#f8f8f2"
+dim_foreground = "#6272a4"
+bright_foreground = "#ffffff"
+
+[colors.cursor]
+text = "#282a36"
+cursor = "#f8f8f2"
+
+[colors.vi_mode_cursor]
+text = "#282a36"
+cursor = "#8be9fd"
+
+[colors.search.matches]
+foreground = "#f8f8f2"
+background = "#44475a"
+
+[colors.search.focused_match]
+foreground = "#282a36"
+background = "#50fa7b"
+
+[colors.footer_bar]
+foreground = "#f8f8f2"
+background = "#44475a"
+
+[colors.hints.start]
+foreground = "#282a36"
+background = "#ffb86c"
+
+[colors.hints.end]
+foreground = "#f8f8f2"
+background = "#44475a"
+
+[colors.selection]
+text = "#f8f8f2"
+background = "#44475a"
+
+[colors.normal]
+black = "#000000"
+red = "#ff5555"
+green = "#50fa7b"
+yellow = "#f1fa8c"
+blue = "#bd93f9"
+magenta = "#ff79c6"
+cyan = "#8be9fd"
+white = "#bfbfbf"
+
+[colors.bright]
+black = "#4d4d4d"
+red = "#ff6e6e"
+green = "#69ff94"
+yellow = "#ffffa5"
+blue = "#d6acff"
+magenta = "#ff92df"
+cyan = "#a4ffff"
+white = "#e6e6e6"
+
+[[colors.indexed_colors]]
+index = 16
+color = "#ffb86c"
+
+[[colors.indexed_colors]]
+index = 17
+color = "#ff79c6"

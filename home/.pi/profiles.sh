@@ -101,6 +101,16 @@ pi() {
   _pi_profile_validate "$_pi_profile" || return
   _pi_dir="$PI_PROFILES_DIR/$_pi_profile"
   _pi_profile_sync "$_pi_profile" || return
+
+  # Package commands require the subcommand before its options, so they cannot
+  # receive the interactive --models option.
+  case "${1:-}" in
+    install|remove|uninstall|update|list|config|auth|mcp)
+      PI_CODING_AGENT_DIR="$_pi_dir" command pi "$@"
+      return
+      ;;
+  esac
+
   _pi_scope=$(_pi_profile_model_scope "$_pi_profile") || return
   PI_CODING_AGENT_DIR="$_pi_dir" command pi --models "$_pi_scope" "$@" || _pi_rc=$?
   return "$_pi_rc"

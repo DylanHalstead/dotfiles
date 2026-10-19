@@ -65,6 +65,9 @@
     // mise owns the installed Ruby, Go, and their standard libraries.
     "external_directory:/Users/dylan/.local/share/mise": "allow",
     "external_directory:/Users/dylan/.local/share/mise/*": "allow",
+    // pnpm owns global application packages, including the Pi CLI.
+    "external_directory:/Users/dylan/Library/pnpm": "allow",
+    "external_directory:/Users/dylan/Library/pnpm/*": "allow",
     "external_directory:/home/dylan/repos": "allow",
     "external_directory:/home/dylan/repos/*": "allow",
     "external_directory:/home/dylan/dotfiles": "allow",
@@ -73,6 +76,8 @@
     "external_directory:/home/dylan/.pi/*": "allow",
     "external_directory:/home/dylan/.local/share/mise": "allow",
     "external_directory:/home/dylan/.local/share/mise/*": "allow",
+    "external_directory:/home/dylan/.local/share/pnpm": "allow",
+    "external_directory:/home/dylan/.local/share/pnpm/*": "allow",
     "external_directory:/opt/homebrew/Cellar/pi-coding-agent": "allow",
     "external_directory:/opt/homebrew/Cellar/pi-coding-agent/*": "allow",
     "external_directory:/home/linuxbrew/.linuxbrew/Cellar/pi-coding-agent": "allow",

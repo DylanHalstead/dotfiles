@@ -49,6 +49,13 @@ global files free of repository-specific facts.
 Instructions guide model behavior. Rules that must hold belong in permissions
 or an extension that enforces them. Tools run on the host without an OS sandbox.
 
+`agent/pi-permissions.jsonc` allows inspection of skills through `~/.agents`,
+Node dependencies (`node_modules`), Go modules (`pkg/mod`), and user Ruby gems
+without external-directory prompts. Direct `write` and `edit` calls in those
+locations still ask; shell commands follow the separate bash policy. Existing
+trusted repository and runtime roots retain their permissions. Unlisted external
+paths still ask, and `guardrails.ts` keeps its credential-file checks.
+
 ## Workflows
 
 Collaboration is the default working style in `APPEND_SYSTEM.md`. Prompt

@@ -13,7 +13,41 @@
   },
 
   "tools": {
-    "*": "allow"
+    "*": "allow",
+    // Documentation and dependency inspection should not silently modify
+    // skills or installed packages. Shell commands keep their own policy.
+    "write:/Users/dylan/.agents": "ask",
+    "write:/Users/dylan/.agents/*": "ask",
+    "edit:/Users/dylan/.agents": "ask",
+    "edit:/Users/dylan/.agents/*": "ask",
+    "write:/home/dylan/.agents": "ask",
+    "write:/home/dylan/.agents/*": "ask",
+    "edit:/home/dylan/.agents": "ask",
+    "edit:/home/dylan/.agents/*": "ask",
+    "write:*/node_modules": "ask",
+    "write:*/node_modules/*": "ask",
+    "edit:*/node_modules": "ask",
+    "edit:*/node_modules/*": "ask",
+    "write:*/pkg/mod": "ask",
+    "write:*/pkg/mod/*": "ask",
+    "edit:*/pkg/mod": "ask",
+    "edit:*/pkg/mod/*": "ask",
+    "write:/Users/dylan/.gem": "ask",
+    "write:/Users/dylan/.gem/*": "ask",
+    "edit:/Users/dylan/.gem": "ask",
+    "edit:/Users/dylan/.gem/*": "ask",
+    "write:/home/dylan/.gem": "ask",
+    "write:/home/dylan/.gem/*": "ask",
+    "edit:/home/dylan/.gem": "ask",
+    "edit:/home/dylan/.gem/*": "ask",
+    "write:/Users/dylan/.local/share/gem": "ask",
+    "write:/Users/dylan/.local/share/gem/*": "ask",
+    "edit:/Users/dylan/.local/share/gem": "ask",
+    "edit:/Users/dylan/.local/share/gem/*": "ask",
+    "write:/home/dylan/.local/share/gem": "ask",
+    "write:/home/dylan/.local/share/gem/*": "ask",
+    "edit:/home/dylan/.local/share/gem": "ask",
+    "edit:/home/dylan/.local/share/gem/*": "ask"
   },
 
   "bash": {
@@ -51,6 +85,24 @@
   "special": {
     "doom_loop": "ask",
     "external_directory": "ask",
+    // Match the requested path, including symlink aliases such as ~/.agents.
+    // Wildcards span directory separators, including nested dependencies.
+    "external_directory:/Users/dylan/.agents": "allow",
+    "external_directory:/Users/dylan/.agents/*": "allow",
+    "external_directory:/home/dylan/.agents": "allow",
+    "external_directory:/home/dylan/.agents/*": "allow",
+    "external_directory:*/node_modules": "allow",
+    "external_directory:*/node_modules/*": "allow",
+    "external_directory:*/pkg/mod": "allow",
+    "external_directory:*/pkg/mod/*": "allow",
+    "external_directory:/Users/dylan/.gem": "allow",
+    "external_directory:/Users/dylan/.gem/*": "allow",
+    "external_directory:/home/dylan/.gem": "allow",
+    "external_directory:/home/dylan/.gem/*": "allow",
+    "external_directory:/Users/dylan/.local/share/gem": "allow",
+    "external_directory:/Users/dylan/.local/share/gem/*": "allow",
+    "external_directory:/home/dylan/.local/share/gem": "allow",
+    "external_directory:/home/dylan/.local/share/gem/*": "allow",
     "external_directory:/tmp/*": "allow",
     "external_directory:/private/tmp/*": "allow",
     // A trailing /* does not match the directory itself, which tools may

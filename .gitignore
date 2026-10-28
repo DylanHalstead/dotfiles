@@ -30,7 +30,6 @@ home/.pi/agent/sandbox/projects.json
 home/.pi/agent/extensions/*/config.json
 home/.pi/agent/extensions/*/logs/
 home/.pi/web-search.json
-home/.pi/agent/web-search.json
 home/.pi/config/
 # Per-machine profile dirs (symlinks + per-profile auth.json). profiles.sh is tracked.
 home/.pi/profiles/

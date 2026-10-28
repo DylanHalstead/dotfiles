@@ -21,6 +21,6 @@
     "npm:@dylanhalstead/pi-inline-skills"
   ],
   "defaultProvider": "openai",
-  "defaultModel": "gpt-5.6-terra",
+  "defaultModel": "gpt-6.1-terra",
   "deviceId": "9a70012c-dde2-41b2-936f-69fe8a7a09c9"
 }

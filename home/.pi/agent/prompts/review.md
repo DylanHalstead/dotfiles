@@ -60,21 +60,31 @@ rather than skimming for a general feeling of wrongness:
 - concurrency: shared mutable state, races, missing idempotency
 - security: injection, unvalidated input crossing a boundary, secrets in logs
 
-Collect candidates. Do not filter yet.
+Trace the main operation as a maintainer would, using the loaded skills to
+assess naming and responsibilities. Collect readability concerns alongside
+correctness candidates. Do not filter yet.
 
 ## Pass 2 — verify
 
-Re-examine each candidate adversarially: try to prove it is not a bug. Classify
-each one and keep the evidence.
+Try to disprove each candidate before classifying it; keep the evidence. Check
+new restrictions and explanations against requirements and existing contracts,
+not just the motivating example. Consider a materially different valid case
+without inventing broader requirements or discarding useful regression coverage.
 
 - **CONFIRMED** — you can name the inputs or state that trigger it and the
   wrong output or failure that results. State them.
 - **PLAUSIBLE** — the mechanism is real but the trigger is uncertain. State
   what evidence would confirm or refute it.
-- **REFUTED** — quote the code that guards against it. Drop it.
+- **SUPPORTED IMPROVEMENT** — no demonstrated defect, but you can identify a
+  specific ambiguity, information leak, or navigation burden and explain how the
+  proposed change reduces it. Try to show why the existing name or boundary is
+  appropriate before retaining the suggestion.
+- **REFUTED** — evidence defeats the concern, or only preference remains. For a
+  suspected bug, quote the code that guards against it. Drop it.
 
-Only CONFIRMED and PLAUSIBLE candidates reach the synthesis pass. A candidate
-you cannot substantiate costs the author more than it saves.
+Only CONFIRMED, PLAUSIBLE, and SUPPORTED IMPROVEMENT candidates reach the
+synthesis pass. A candidate you cannot substantiate costs the author more than
+it saves.
 
 ## Pass 3 — write the review
 
@@ -89,8 +99,9 @@ Map candidates to comments:
 - A confirmed problem that does not block merge becomes `issue`.
 - A plausible concern whose trigger or contract remains uncertain becomes a
   `question`. State what would confirm or dismiss it.
-- An improvement with no demonstrated defect becomes
-  `suggestion (non-blocking)`.
+- A supported improvement with no demonstrated defect becomes
+  `suggestion (non-blocking)`. State the maintenance burden and how the proposed
+  change reduces it; do not describe it as a correctness failure.
 - A minor preference with practical value becomes `nitpick`. Omit formatter
   output and taste with no concrete impact.
 - A refuted candidate is omitted.

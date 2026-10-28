@@ -10,10 +10,10 @@
     },
     "engineering-standard": {
       "source": "DylanHalstead/skills",
-      "ref": "9495dd519ed809dfdee6b18db74f55748bafb2df",
+      "ref": "b14aacca07f477bd7289359ca6cdbddafee7733c",
       "sourceType": "github",
       "skillPath": "skills/engineering-standard/SKILL.md",
-      "computedHash": "2dba47518808ff3664d64b1b7ecf72fdebce9ab0e2f37673bcd667701e52ed28"
+      "computedHash": "f27d819a1c105f154c71f260465b1c21918e4d55fd73a9dc697b0d3830401fdc"
     },
     "frontend-development": {
       "source": "DylanHalstead/skills",
@@ -87,10 +87,10 @@
     },
     "software-design-philosophy": {
       "source": "DylanHalstead/skills",
-      "ref": "9495dd519ed809dfdee6b18db74f55748bafb2df",
+      "ref": "b14aacca07f477bd7289359ca6cdbddafee7733c",
       "sourceType": "github",
       "skillPath": "skills/software-design-philosophy/SKILL.md",
-      "computedHash": "680ccb1bdab94873604cdfa073d2e414b92777cc4acbdb87072216e4a2a23f81"
+      "computedHash": "315911d58c96e93f2d7d138263b13921e751a4bfd54e182e214b390439319105"
     },
     "user-interface-design": {
       "source": "DylanHalstead/skills",

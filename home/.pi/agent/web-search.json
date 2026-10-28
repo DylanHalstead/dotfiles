@@ -1,7 +1,7 @@
 {
-  "summaryModel": "openai/gpt-6.1-sol",
+  "summaryModel": "openai/gpt-6.1-terra",
   "fetch": {
     "answerProvider": "openai",
-    "answerModel": "gpt-6.1-sol"
+    "answerModel": "gpt-6.1-terra"
   }
 }

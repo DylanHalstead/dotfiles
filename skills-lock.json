@@ -24,10 +24,10 @@
     },
     "go-development": {
       "source": "DylanHalstead/skills",
-      "ref": "9495dd519ed809dfdee6b18db74f55748bafb2df",
+      "ref": "1395cf672c323be5248a8efe2b92c80385e20697",
       "sourceType": "github",
       "skillPath": "skills/go-development/SKILL.md",
-      "computedHash": "cf53dcdb064365ea915bd9e70deb7d27e04024e9abe4383c7c93bfb117cac26d"
+      "computedHash": "df4fd356de8431c677b8228e11bbacf4211388419b7d09b7eac704684af13f6e"
     },
     "humanizer": {
       "source": "blader/humanizer",

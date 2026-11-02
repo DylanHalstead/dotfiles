@@ -97,7 +97,7 @@ fi
 # experimental_install restores skills-lock.json from the current directory.
 if command -v npx >/dev/null 2>&1; then
   printf '==> Restoring agent skills from skills-lock.json ...\n'
-  npx --yes skills@1.7.2 experimental_install
+  npx --yes skills@1.7.4 experimental_install
 else
   printf '==> npx not found, skipping agent skill restore.\n'
 fi

@@ -38,10 +38,10 @@
     },
     "issue-authoring": {
       "source": "DylanHalstead/skills",
-      "ref": "9495dd519ed809dfdee6b18db74f55748bafb2df",
+      "ref": "ff1d8b69f7c8ed4636a9e26fd96c13b726bde8da",
       "sourceType": "github",
       "skillPath": "skills/issue-authoring/SKILL.md",
-      "computedHash": "aa1ada14dc811ab3234309939af86d5655551525aaccaa942a0592a99621ab00"
+      "computedHash": "4867a8c199ed8c1d1563caa7754301d7fa50a43ebdc06df223b771c0ea9689cf"
     },
     "linear-cli": {
       "source": "schpet/linear-cli",

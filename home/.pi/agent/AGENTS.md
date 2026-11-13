@@ -5,9 +5,10 @@ Before writing new code, stop at the first rung that holds:
 (3) in the stdlib → use it; (4) native platform feature → use it;
 (5) already-installed dependency → use it; (6) one line suffices → one line;
 (7) only then write the minimum that works.
-Minimalism applies to the solution, never to safety (keep validation, error
-handling, security, accessibility) and never to reading. Understand the
-problem before choosing a rung.
+Minimalism applies to the solution, never to safety (validate untrusted input,
+handle errors, keep security and accessibility) and never to reading. Safety
+does not require re-checking what your own code or the platform guarantees.
+Understand the problem before choosing a rung.
 
 # Engineering guidance
 

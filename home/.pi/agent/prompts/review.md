@@ -118,10 +118,33 @@ Map candidates to comments:
   output and taste with no concrete impact.
 - A refuted candidate is omitted.
 
-Comment on the code, not the author. Lead with the observed behavior or risk,
-then explain the trigger and impact. Explain why when it is not obvious. Give a
-concrete direction for a fix without requiring the exact implementation unless
-the contract leaves only one sound choice.
+### Frame comments for a technical conversation
+
+Comment on the code, not the author. Keep each comment focused on one decision
+and anchor it where that behavior is owned. Include enough evidence to understand
+and act without repeating the surrounding code or the investigation history.
+
+- **Established defect:** state the observed behavior, triggering case, and
+  concrete impact directly. Explain why it matters and suggest a sound fix
+  direction. Do not soften a verified failure into a rhetorical question.
+- **Unresolved intent or contract:** use a genuine question. State what the code
+  does, your current understanding and its basis, then ask which behavior is
+  intended. Explain the consequence that makes the answer matter and what
+  evidence would settle it. Do not assume the answer or prescribe a fix before
+  the requirement is clear.
+- **Design improvement:** explain the specific maintenance burden and propose
+  an alternative with its trade-off. Leave room for a sound existing rationale;
+  do not present a preference as a defect.
+
+Prefer one focused question over a list of speculative concerns. Avoid
+"Why didn't you...?", leading questions, and commands disguised as "Could we...?".
+Do not require an exact implementation unless the contract leaves only one
+sound choice. Mark blocking status by demonstrated merge impact, not by how
+strongly the comment is worded.
+
+If new evidence or clarified intent defeats a finding, withdraw or reclassify
+it explicitly. Do not keep recommending its fix under the old assumption, or
+accept a proposed change without checking its effect on existing behavior.
 
 After writing the comments, check whether several share one root cause. Merge
 them when one coordinated change would fix them. Otherwise, keep them separate.
@@ -165,7 +188,9 @@ skills: <repo skills you loaded, or "none">
 
 **question: <the unresolved contract or behavior>**
 
-<Why the concern is credible and what evidence would settle it.>
+<Observed behavior and the requirement or assumption behind the concern. Ask one
+focused question about the intended behavior or missing evidence; explain what
+answer would confirm or dismiss the concern.>
 
 (repeat in merge-impact order; use the appropriate Conventional Comment label)
 

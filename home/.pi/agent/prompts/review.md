@@ -71,6 +71,18 @@ new restrictions and explanations against requirements and existing contracts,
 not just the motivating example. Consider a materially different valid case
 without inventing broader requirements or discarding useful regression coverage.
 
+Check requirements and code quality separately; passing one does not establish
+that the other is sound. Cite the requirement or contract behind a behavioral
+finding. If none is explicit, explain the concrete user expectation and its
+basis rather than treating an assumption as settled policy. Distinguish a bug
+in the implementation from a concern about the requirement itself. When sources
+conflict or intent is unclear, name the conflict and ask which behavior is
+intended. Continue checks that do not depend on the answer.
+
+Trace the claimed consequence to the boundary where it matters. An intermediate
+state alone does not prove a downstream failure; inspect callers and guards
+before claiming one.
+
 - **CONFIRMED** — you can name the inputs or state that trigger it and the
   wrong output or failure that results. State them.
 - **PLAUSIBLE** — the mechanism is real but the trigger is uncertain. State

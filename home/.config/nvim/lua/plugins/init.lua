@@ -1,5 +1,33 @@
 return {
   {
+    "nvim-treesitter/nvim-treesitter",
+    lazy = false, -- the main-branch rewrite does not support lazy loading
+    -- NvChad's :TSInstallAll reads this table directly, not resolved Lazy opts.
+    opts = {
+      ensure_installed = {
+        "lua",
+        "luadoc",
+        "printf",
+        "vim",
+        "vimdoc",
+        "go",
+        "gomod",
+        "gosum",
+        "gowork",
+        "ruby",
+        "python",
+        "javascript",
+        "typescript",
+        "tsx",
+        "json",
+        "css",
+        "markdown",
+        "markdown_inline",
+      },
+    },
+  },
+
+  {
     "stevearc/conform.nvim",
     event = "BufWritePre",
     opts = require "configs.conform",

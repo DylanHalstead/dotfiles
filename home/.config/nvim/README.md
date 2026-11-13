@@ -1,3 +1,11 @@
+# Personal Neovim config
+
+Requires Neovim 0.12+ and `tree-sitter-cli` (`brew install tree-sitter-cli` on macOS).
+After plugins install, run `:MasonInstallAll` for editor tools and `:TSInstallAll`
+for parsers.
+
+## NvChad starter notes
+
 **This repo is supposed to be used as config by NvChad users!**
 
 - The main nvchad repo (NvChad/NvChad) is used as a plugin by this repo.

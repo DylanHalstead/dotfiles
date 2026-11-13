@@ -87,10 +87,10 @@
     },
     "software-design-philosophy": {
       "source": "DylanHalstead/skills",
-      "ref": "b14aacca07f477bd7289359ca6cdbddafee7733c",
+      "ref": "3f502dbe66edefdd86b9e74e149eb9c1ae19d026",
       "sourceType": "github",
       "skillPath": "skills/software-design-philosophy/SKILL.md",
-      "computedHash": "315911d58c96e93f2d7d138263b13921e751a4bfd54e182e214b390439319105"
+      "computedHash": "0117dd13877638122422a512fc791dd70ed06ddcc1e118958960f45619dd1ff9"
     },
     "user-interface-design": {
       "source": "DylanHalstead/skills",

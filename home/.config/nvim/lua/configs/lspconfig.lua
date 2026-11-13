@@ -2,6 +2,23 @@ require("nvchad.configs.lspconfig").defaults()
 
 local nvlsp = require "nvchad.configs.lspconfig"
 
+-- NvChad's progress renderer cannot handle JSON null in optional fields.
+-- Normalize those fields at the LSP boundary until nvchad/ui fixes its renderer.
+vim.lsp.config("*", {
+  handlers = {
+    ["$/progress"] = function(err, result, ctx, config)
+      if type(result.value) == "table" then
+        for _, field in ipairs { "percentage", "message", "title" } do
+          if result.value[field] == vim.NIL then
+            result.value[field] = nil
+          end
+        end
+      end
+      return vim.lsp.handlers["$/progress"](err, result, ctx, config)
+    end,
+  },
+})
+
 -- Lua
 vim.lsp.config("lua_ls", {
   on_attach = nvlsp.on_attach,

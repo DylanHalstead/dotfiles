@@ -1,7 +1,7 @@
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },
-    go = { "goimports_reviser", "gofmt", "golines" },
+    go = { "goimports-reviser", "gofmt", "golines" },
     ruby = { "rubocop" },
     javascript = { "oxfmt" },
     javascriptreact = { "oxfmt" },

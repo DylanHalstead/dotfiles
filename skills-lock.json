@@ -66,10 +66,10 @@
     },
     "ruby-development": {
       "source": "DylanHalstead/skills",
-      "ref": "9495dd519ed809dfdee6b18db74f55748bafb2df",
+      "ref": "45b0fe961f77a19ca086c11fc3cd48e741293c0c",
       "sourceType": "github",
       "skillPath": "skills/ruby-development/SKILL.md",
-      "computedHash": "6112f51996e9ced247b1290226e6b86deb97e36e92c4fa57ca590a8d096ef9d3"
+      "computedHash": "54b07ef492821b4c7c47d6b708a26adb29a758b337ae08087ca1bb5eaf59b367"
     },
     "sentry-cli": {
       "source": "cli.sentry.dev",

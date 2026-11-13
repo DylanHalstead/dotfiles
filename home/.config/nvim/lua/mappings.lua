@@ -36,7 +36,17 @@ end, { desc = "Floating diagnostic" })
 
 -- write a read-only file as sudo
 vim.api.nvim_create_user_command("SudoWrite", function()
-  vim.cmd "silent! write !sudo tee > /dev/null %"
+  local path = vim.api.nvim_buf_get_name(0)
+  if path == "" then
+    vim.notify("SudoWrite requires a file name", vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd("silent write !sudo tee -- " .. vim.fn.shellescape(path, true) .. " > /dev/null")
+  if vim.v.shell_error ~= 0 then
+    vim.notify("SudoWrite failed; unsaved changes kept in the buffer", vim.log.levels.ERROR)
+    return
+  end
   vim.cmd "edit!"
 end, { desc = "Write current file with sudo" })
 vim.cmd "cnoreabbrev w!! SudoWrite"

@@ -8,12 +8,11 @@ M.base46 = {
 }
 
 -- Suppress MasonInstallAll's auto-discovery for tools we install outside Mason.
--- ruff/ty come from `uv tool install`; rubocop comes from `gem install` under mise.
+-- mise owns ruff/ty; rubocop comes from `gem install` under mise.
 M.mason = {
   -- explicit pkgs for tools NvChad's auto-discovery misses
   pkgs = { "goimports-reviser" },
-  -- ruff/ty come from `uv tool install`; rubocop comes from `gem install` under mise
-  skip = { "ruff", "rubocop" },
+  skip = { "ruff", "ty", "rubocop" },
 }
 
 return M

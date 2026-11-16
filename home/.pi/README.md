@@ -11,9 +11,8 @@ installation and profile usage.
 ├── agent/
 │   ├── APPEND_SYSTEM.md     stable behavior, tool use, and output style
 │   ├── AGENTS.md            personal engineering standards
-│   ├── extensions/          runtime behavior and enforced controls
+│   ├── extensions/          runtime behavior and guardrails.json policy
 │   ├── prompts/             user-invoked workflows
-│   ├── pi-permissions.jsonc permission policy
 │   └── settings.json        shared Pi settings, packages, and extensions
 ├── model-scopes.json        profile-specific Pi enabledModels scopes
 └── profiles.sh              account selection and profile synchronization
@@ -49,12 +48,11 @@ global files free of repository-specific facts.
 Instructions guide model behavior. Rules that must hold belong in permissions
 or an extension that enforces them. Tools run on the host without an OS sandbox.
 
-`agent/pi-permissions.jsonc` allows inspection of skills through `~/.agents`,
-Node dependencies (`node_modules`), Go modules (`pkg/mod`), and user Ruby gems
-without external-directory prompts. Direct `write` and `edit` calls in those
-locations still ask; shell commands follow the separate bash policy. Existing
-trusted repository and runtime roots retain their permissions. Unlisted external
-paths still ask, and `guardrails.ts` keeps its credential-file checks.
+[`@aliou/pi-guardrails`](https://github.com/aliou/pi-guardrails) owns file
+protection and command approval. Shared policy lives in
+`agent/extensions/guardrails.json`. [Local guardrails](agent/extensions/local-guardrails/README.md)
+add read grants, private scratch access, YOLO controls, and cloud-command checks
+for both account profiles.
 
 ## Workflows
 

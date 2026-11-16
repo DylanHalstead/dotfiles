@@ -105,12 +105,9 @@ export default function (pi: ExtensionAPI) {
 					const diffStr = diffParts.length > 0 ? ` (${diffParts.join(",")})` : "";
 					const branchStr = branch ? `⎇ ${branch}${diffStr}` : "";
 
-					const extStatuses = footerData.getExtensionStatuses();
-					const yoloStatus = extStatuses.get("yolo");
-
 					const line1Parts = [
 						theme.fg("accent", modelLabel) + theme.fg("dim", ` - ${thinking}`),
-						yoloStatus,
+						footerData.getExtensionStatuses().get("path-intent"),
 						theme.fg("dim", `$${sessionCost.toFixed(2)}, `) +
 							`[${bar}]` +
 							theme.fg("dim", ` ${fmtK(tokens)}/${fmtK(contextWindow)} (${pct}%)`),

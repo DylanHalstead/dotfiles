@@ -1,0 +1,162 @@
+{
+  "$schema": "https://unpkg.com/@aliou/pi-guardrails@0.23.0/schema.json",
+  "version": "0.23.0",
+  "enabled": true,
+  "applyBuiltinDefaults": false,
+  "onboarding": {
+    "completed": true,
+    "version": "0.23.0"
+  },
+  "features": {
+    "policies": true,
+    "permissionGate": true,
+    "pathAccess": true
+  },
+  "pathAccess": {
+    "mode": "ask",
+    "applyTo": "all",
+    "allowedPaths": [
+      {
+        "kind": "file",
+        "path": "/dev/null"
+      }
+    ]
+  },
+  "policies": {
+    "rules": [
+      {
+        "id": "credential-files",
+        "description": "Credential files, including workspace and Pi profile credentials",
+        "patterns": [
+          {
+            "pattern": ".env"
+          },
+          {
+            "pattern": ".env.*"
+          },
+          {
+            "pattern": ".zsh_secrets"
+          },
+          {
+            "pattern": "(^|/)(\\.gnupg|\\.aws|\\.kube)(/|$)",
+            "regex": true
+          },
+          {
+            "pattern": "(^|/)\\.config/gcloud(/|$)",
+            "regex": true
+          },
+          {
+            "pattern": "credentials*.json"
+          },
+          {
+            "pattern": ".netrc"
+          },
+          {
+            "pattern": "id_rsa"
+          },
+          {
+            "pattern": "id_ecdsa"
+          },
+          {
+            "pattern": "id_ed25519"
+          },
+          {
+            "pattern": "(^|/)\\.pi/(agent|profiles/[^/]+)/auth\\.json$",
+            "regex": true
+          }
+        ],
+        "allowedPatterns": [
+          {
+            "pattern": ".env.example"
+          },
+          {
+            "pattern": ".env.sample"
+          },
+          {
+            "pattern": ".env.template"
+          },
+          {
+            "pattern": ".env.localstack"
+          },
+          {
+            "pattern": ".env.localstack.params"
+          },
+          {
+            "pattern": ".env.localstack.secrets"
+          }
+        ],
+        "protection": "noAccess",
+        "respectCwd": false,
+        "onlyIfExists": false,
+        "blockMessage": "Credential access is blocked: {file}. Use a committed example or ask the user for the needed value."
+      },
+      {
+        "id": "private-key-files",
+        "description": "SSH private material and private-key containers; public certificates remain readable",
+        "patterns": [
+          { "pattern": "(^|/)\\.ssh(/|$)", "regex": true },
+          { "pattern": "\\.(?:pem|key|p12|pfx)$", "regex": true },
+          { "pattern": "(^|/)[^/]*_(?:rsa|ecdsa|ed25519)$", "regex": true }
+        ],
+        "allowedPatterns": [{ "pattern": "*.pub" }],
+        "protection": "noAccess",
+        "respectCwd": false,
+        "onlyIfExists": false,
+        "blockMessage": "Private key access is blocked: {file}. Use the SSH agent for authentication; do not expose private key material."
+      }
+    ]
+  },
+  "permissionGate": {
+    "requireConfirmation": true,
+    "patterns": [
+      {
+        "pattern": "(^|[^\\w-])git(?:\\s+(?:-C\\s+(?:\"[^\"]*\"|'[^']*'|\\S+)|-c\\s+(?:\"[^\"]*\"|'[^']*'|\\S+)|--[\\w-]+(?:=\\S+)?))*\\s+push(?![\\w-])",
+        "regex": true,
+        "description": "push commits to a remote repository"
+      },
+      {
+        "pattern": "(^|[^\\w-])(?:npm|pnpm)(?:\\s+--?[\\w-]+(?:=(?:\"[^\"]*\"|'[^']*'|[^\\s;&|]+))?(?:\\s+(?:\"[^\"]*\"|'[^']*'|[^\\s;&|]+))?)*\\s+publish(?=$|[\\s;&|)])",
+        "regex": true,
+        "description": "publish packages to a registry"
+      },
+      {
+        "pattern": "(^|[^\\w-])terraform(?:\\s+-chdir=(?:\"[^\"]*\"|'[^']*'|\\S+))?\\s+(?:apply|import|destroy|state\\s+(?:rm|mv))(?![\\w-])",
+        "regex": true,
+        "description": "change infrastructure or Terraform state"
+      }
+    ],
+    "allowedPatterns": [],
+    "autoDenyPatterns": [
+      {
+        "pattern": "(^|[^\\w-])sudo(?![\\w-])",
+        "regex": true,
+        "description": "superuser commands are not allowed"
+      },
+      {
+        "pattern": "(^|[^\\w-])gcloud\\s+(?:--[\\w-]+(?:=(?:\"[^\"]*\"|'[^']*'|\\S+)|\\s+(?:\"[^\"]*\"|'[^']*'|\\S+))?\\s+)*auth\\s+(?:application-default\\s+)?print-access-token(?![\\w-])",
+        "regex": true,
+        "description": "printing reusable cloud credentials is not allowed"
+      },
+      {
+        "pattern": "(^|[^\\w-])terraform(?:\\s+-chdir=(?:\"[^\"]*\"|'[^']*'|\\S+))?\\s+destroy(?![\\w-])",
+        "regex": true,
+        "description": "Terraform destroy is not allowed"
+      },
+      {
+        "pattern": "\\b(?:curl|wget)\\b[^\\n]*\\|\\s*(?:sh|bash)\\b",
+        "regex": true,
+        "description": "piping downloaded code into a shell is not allowed"
+      },
+      {
+        "pattern": "\\brm\\s+-(?:rf|fr)\\s+(?:/(?:\\s|$)|~)",
+        "regex": true,
+        "description": "recursive forced deletion of root or home paths is not allowed"
+      },
+      {
+        "pattern": "\\bmkfs(?:\\.|\\s|$)|\\bdd\\s+[^\\n]*of=/dev/|\\bchmod\\s+-R\\s+777\\s+/(?:\\s|$)",
+        "regex": true,
+        "description": "destructive disk or root permission commands are not allowed"
+      }
+    ]
+  }
+}

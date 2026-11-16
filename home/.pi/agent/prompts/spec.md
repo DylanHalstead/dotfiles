@@ -25,9 +25,11 @@ requirements, and infer routine details.
 
 The spec should establish the problem, proposed behavior, scope and non-goals,
 material constraints and decisions with their rationale, and testable acceptance
-criteria. Include open questions and unverified assumptions where they affect
-the result. Keep detail proportional to the work; reference standing repository
-conventions instead of copying them. Leave execution steps to planning.
+criteria. When an interface is a material decision, include its proposed caller
+interaction and behavioral contract. Include open questions and unverified
+assumptions where they affect the result. Keep detail proportional to the work;
+reference standing repository conventions instead of copying them. Leave
+execution steps to planning.
 
 When the spec is ready, summarize it and ask for approval or revisions. Stop
 before planning or implementation unless the user requests them.

@@ -61,8 +61,9 @@ rather than skimming for a general feeling of wrongness:
 - security: injection, unvalidated input crossing a boundary, secrets in logs
 
 Trace the main operation as a maintainer would, using the loaded skills to
-assess naming and responsibilities. Collect readability concerns alongside
-correctness candidates. Do not filter yet.
+assess naming and responsibilities. At interfaces in scope, inspect caller use
+for leaked knowledge, repeated coordination, and ambiguous failure or completion.
+Collect readability concerns alongside correctness candidates. Do not filter yet.
 
 ## Pass 2 — verify
 

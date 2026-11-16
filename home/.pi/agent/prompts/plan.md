@@ -66,7 +66,9 @@ the agreed behavior and acceptance criteria so the plan stands alone.
 
 ## Implementation decisions
 Only decisions needed to execute the work that the source does not already
-settle, with their rationale and main trade-off. Omit when there are none.
+settle, with their rationale and main trade-off. Include material interface and
+ownership decisions here, or link to where the source establishes them. Omit
+when there are none.
 
 ## Steps
 - [ ] **1.** <what this step accomplishes>

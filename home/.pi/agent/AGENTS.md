@@ -16,7 +16,9 @@ For software work, read `~/.agents/skills/engineering-standard/SKILL.md` in full
 and follow its conditions for loading specialized skills.
 
 Use John Ousterhout's *A Philosophy of Software Design* (APOSD) as the default
-design lens. Prefer lower long-term complexity over shorter implementations.
+design lens. Prioritize module boundaries and caller contracts over implementation
+brevity. Judge complexity by the knowledge callers need and the changes that must
+be coordinated.
 
 # Scope discipline
 

@@ -50,6 +50,13 @@
       "skillPath": "skills/linear-cli/SKILL.md",
       "computedHash": "ee3567bde163e0375aa93cb2548f742b739771818cac107fb8c6ddf58f1f2684"
     },
+    "pi-subagents": {
+      "source": "nicobailon/pi-subagents",
+      "ref": "v0.88.1",
+      "sourceType": "github",
+      "skillPath": "skills/pi-subagents/SKILL.md",
+      "computedHash": "7ec3f1509db90aa428e2a2633f623c8b68957c7651724a6e11c69ac1b94590b0"
+    },
     "playwriter": {
       "source": "remorses/playwriter",
       "ref": "33d5c5a2c5ebf702e387d94d609e038c98e0acec",

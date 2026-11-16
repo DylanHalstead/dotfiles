@@ -7,7 +7,6 @@ extensions:
   - ../npm/node_modules/@aliou/pi-guardrails/extensions/guardrails/index.ts
   - ../npm/node_modules/@aliou/pi-guardrails/extensions/path-access/index.ts
 defaultContext: fresh
-async: false
 inheritProjectContext: true
 inheritGlobalContext: false
 inheritSkills: true

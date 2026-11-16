@@ -42,12 +42,14 @@ Announce the purpose before launching; no separate approval is needed. Prefer
 web fetch/summary tools for simple lookups. Do not launch routine post-change
 reviews or review loops.
 
-Default to one child; batch only independent questions. Use fresh context,
-user-defined agents, and foreground execution (`context: "fresh"`,
-`agentScope: "user"`, `async: false`), not chains or background workflows.
+Choose the smallest useful number of children; run independent tasks in
+parallel when that helps. Background execution is welcome when the main session
+can continue useful work; use foreground execution when it needs to wait. Use
+fresh context and user-defined agents (`context: "fresh"`, `agentScope: "user"`).
 Give children a self-contained brief and source references, not the main
-session's reasoning. The main session verifies findings and owns decisions,
-edits, and validation. Do not bypass blocked launches or permission denials.
+session's reasoning. The main session tracks completion, verifies findings,
+and owns decisions, edits, and validation. Do not bypass blocked launches or
+permission denials.
 
 # Communication
 

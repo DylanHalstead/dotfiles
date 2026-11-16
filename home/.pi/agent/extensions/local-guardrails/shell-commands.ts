@@ -7,6 +7,7 @@ import { parseShell, type PackagePolicy } from "./package-policy.ts";
 
 const SHELLS = new Set(["bash", "sh", "zsh"]);
 const COMMAND_WRAPPERS = new Set(["env", "command", "exec"]);
+const EXECUTION_WRAPPERS = new Set(["timeout", "gtimeout", "mise", "direnv", "uv"]);
 const OPAQUE_WRAPPERS = new Set([...COMMAND_WRAPPERS, ...SHELLS, "eval", "xargs"]);
 const VALUE_OPTIONS = new Set([
   "--profile",
@@ -98,6 +99,7 @@ const cloudPolicies = new Map<string, CloudPolicy>([
           "get-parameters",
           "get-parameters-by-path",
           "get-session-token",
+          "get-role-credentials",
           "get-federation-token",
           "assume-role",
           "get-login-password",
@@ -110,6 +112,18 @@ const cloudPolicies = new Map<string, CloudPolicy>([
         if (service === "s3" && operation === "ls") return true;
         if (service === "sts" && operation === "get-caller-identity") return true;
         return operation !== undefined && /^(?:list|describe|head)-/.test(operation);
+      },
+    },
+  ],
+  [
+    "aws-vault",
+    {
+      credentialPatterns: [
+        /(?:^|\s)export(?:\s|$)/,
+        /\bexec\b[\s\S]*?(?:\s)(?:--json(?:=true)?|-j)(?=\s|$)/,
+      ],
+      isInspection([operation]) {
+        return operation === "list" || operation === "version";
       },
     },
   ],
@@ -283,6 +297,17 @@ function analyzeShell(command: string): ShellAnalysis {
       if (nested.cloud !== "none") cloud = "confirm";
     }
 
+    if (cli && EXECUTION_WRAPPERS.has(cli)) {
+      const wrapped = executionCommand(cli, call);
+      if (wrapped) {
+        calls.push(wrapped);
+      } else if (call.some((word) => word !== undefined && CLOUD_TEXT.test(word))) {
+        if (containsCredentialCommand(call)) return { cloud: "secret", invocations };
+        cloud = "confirm";
+      }
+      continue;
+    }
+
     if (!cli || !cloudPolicies.has(cli)) {
       // A wrapper's cloud-related arguments do not prove what it executes.
       if (
@@ -293,6 +318,34 @@ function analyzeShell(command: string): ShellAnalysis {
         cloud = "confirm";
       }
       continue;
+    }
+
+    if (cli === "aws-vault") {
+      const separator = call.indexOf("--");
+      const vaultArgs = call.slice(1, separator < 0 ? undefined : separator);
+      if (classifyCloudCommand(cli, vaultArgs.map((word) => word ?? "<unresolved>")) === "secret") {
+        return { cloud: "secret", invocations };
+      }
+      const wrapped = vaultCommand(call);
+      // Even unrecognized vault options must not hide known AWS credential output.
+      const aws = call.findIndex(
+        (word, index) => index > 0 && word !== undefined && basename(word) === "aws",
+      );
+      if (
+        aws >= 0 &&
+        classifyCloudCommand(
+          "aws",
+          call.slice(aws + 1).map((word) => word ?? "<unresolved>"),
+        ) === "secret"
+      ) {
+        return { cloud: "secret", invocations };
+      }
+      if (wrapped) {
+        const executable = unwrapCommand(wrapped)[0];
+        if (!executable || !cloudPolicies.has(basename(executable))) cloud = "confirm";
+        calls.push(wrapped);
+        continue;
+      }
     }
 
     const decision = classifyCloudCommand(
@@ -307,6 +360,127 @@ function analyzeShell(command: string): ShellAnalysis {
     if (decision === "confirm" || cloud === "none") cloud = decision;
   }
   return { cloud, invocations };
+}
+
+function containsCredentialCommand(call: Invocation): boolean {
+  for (const [index, word] of call.entries()) {
+    if (!word) continue;
+    const cli = basename(word);
+    if (
+      cloudPolicies.has(cli) &&
+      classifyCloudCommand(
+        cli,
+        call.slice(index + 1).map((arg) => arg ?? "<unresolved>"),
+      ) === "secret"
+    ) {
+      return true;
+    }
+    if (/\s/.test(word) && CLOUD_TEXT.test(word) && analyzeShell(word).cloud === "secret") {
+      return true;
+    }
+  }
+  return false;
+}
+
+function executionCommand(cli: string, call: Invocation): Invocation | undefined {
+  if (cli === "uv") {
+    if (call[1] !== "run") return;
+    const index = call[2] === "--" ? 3 : 2;
+    return call[index] && !call[index]!.startsWith("-") ? call.slice(index) : undefined;
+  }
+  if (cli === "direnv") {
+    return call[1] === "exec" && call[2] && call[3] ? call.slice(3) : undefined;
+  }
+  if (cli === "timeout" || cli === "gtimeout") {
+    let index = 1;
+    while (call[index]?.startsWith("-")) {
+      const option = call[index]!;
+      if (option === "--") {
+        index++;
+        break;
+      }
+      if (["-f", "--foreground", "-p", "--preserve-status", "-v", "--verbose"].includes(option)) {
+        index++;
+      } else if (["-k", "--kill-after", "-s", "--signal"].includes(option) && call[index + 1]) {
+        index += 2;
+      } else if (/^--(?:kill-after|signal)=.+/.test(option) || /^-[ks].+/.test(option)) {
+        index++;
+      } else return;
+    }
+    if (!call[index] || !/^(?:\d+(?:\.\d*)?|\.\d+)[smhd]?$/.test(call[index]!)) return;
+    return call[index + 1] ? call.slice(index + 1) : undefined;
+  }
+  if (cli !== "mise") return;
+  let index = 1;
+  let exec = false;
+  while (index < call.length) {
+    const word = call[index];
+    if (!word) return;
+    if (word === "--") return exec && call[index + 1] ? call.slice(index + 1) : undefined;
+    if (word === "-c" || word === "--command") {
+      return exec && call[index + 1] ? ["sh", "-c", call[index + 1]] : undefined;
+    }
+    if (word.startsWith("--command=")) return exec ? ["sh", "-c", word.slice(10)] : undefined;
+    if ([
+      "-C", "--cd", "-E", "--env", "-j", "--jobs", "--allow-env", "--allow-net",
+      "--allow-read", "--allow-write", "--secrets",
+    ].includes(word)) {
+      if (!call[index + 1]) return;
+      index += 2;
+    } else if (/^--(?:cd|env|jobs|allow-env|allow-net|allow-read|allow-write|secrets)=.+/.test(word)) {
+      index++;
+    } else if ([
+      "-q", "--quiet", "-v", "--verbose", "-y", "--yes", "--locked", "--silent",
+      "--deny-all", "--deny-env", "--deny-net", "--deny-read", "--deny-write",
+      "--fresh-env", "--no-deps", "--raw", "--secrets-all",
+    ].includes(word)) {
+      index++;
+    } else if (!exec && (word === "exec" || word === "x")) {
+      exec = true;
+      index++;
+    } else if (exec && /^[\w.+:/-]+@[^\s]+$/.test(word)) {
+      index++;
+    } else return;
+  }
+  return;
+}
+
+function vaultCommand(call: Invocation): Invocation | undefined {
+  let index = 1;
+  let exec = false;
+  const valueOptions = new Set([
+    "--backend", "--session-backend", "--prompt", "--keychain", "--session-keychain",
+    "--duration", "-d", "--region", "--mfa-token", "-t", "--browser",
+  ]);
+  const booleanOptions = new Set([
+    "--debug", "-v", "--no-session", "-n", "--server", "-s", "--ec2-server",
+    "--ecs-server", "--lazy", "--stdout", "--device-code", "--profile-env",
+  ]);
+  while (index < call.length) {
+    const word = call[index];
+    if (word === undefined) return;
+    if (word === "--") {
+      index++;
+      break;
+    }
+    if (!word.startsWith("-")) {
+      if (!exec) {
+        if (word !== "exec") return;
+        exec = true;
+        index++;
+        continue;
+      }
+      break;
+    }
+    const [option, ...value] = word.split("=");
+    if (booleanOptions.has(option) && value.length === 0) index++;
+    else if (valueOptions.has(option)) index += value.length ? 1 : 2;
+    else return;
+  }
+  if (!exec || !call[index] || !call[index + 1]) return;
+  index++; // The profile precedes the command.
+  if (call[index] === "--") index++;
+  return call[index] ? call.slice(index) : undefined;
 }
 
 function literalWord(node: Word | WordPart): string | undefined {

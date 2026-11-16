@@ -21,8 +21,11 @@ exceptions work in TUI/RPC; print/JSON modes use upstream path grants.
 
 ## Shell approvals and YOLO
 
-Recognized AWS, GCloud, and kubectl inspection passes. Mutations and unknown
-operations ask; recognized credential output is blocked.
+Recognized AWS, GCloud, and kubectl inspection passes. Supported `aws-vault exec`,
+`timeout`/`gtimeout`, `mise exec`, `direnv exec`, and `uv run` invocations pass
+their inner commands through the same checks. Mutations and unknown cloud
+operations ask; recognized credential output, including `aws-vault export`, is
+blocked. Unrecognized wrapper syntax involving cloud commands asks for approval.
 
 `/yolo [on|off]`, `Alt+Shift+Y`, or `--yolo` bypass external-path and cloud
 approval. Credential blocks and Git, Terraform, and publishing safeguards remain

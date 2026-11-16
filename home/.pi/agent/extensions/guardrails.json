@@ -19,6 +19,26 @@
       {
         "kind": "file",
         "path": "/dev/null"
+      },
+      {
+        "kind": "directory",
+        "path": "~/.agents"
+      },
+      {
+        "kind": "directory",
+        "path": "~/dotfiles"
+      },
+      {
+        "kind": "directory",
+        "path": "~/.pi/agent"
+      },
+      {
+        "kind": "directory",
+        "path": "~/.pi/profiles"
+      },
+      {
+        "kind": "directory",
+        "path": "~/Library/pnpm/global"
       }
     ]
   },

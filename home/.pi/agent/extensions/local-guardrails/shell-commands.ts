@@ -1,224 +1,419 @@
-import { getAgentDir, isToolCallEventType, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { createRequire } from "node:module";
-import { basename, join } from "node:path";
-import type { PackagePolicy } from "./package-policy.ts";
+import { basename } from "node:path";
 
-// Use the shell parser shipped with the pinned guardrails package, not a
-// second shell tokenizer with different quoting/substitution semantics.
-const require = createRequire(join(getAgentDir(), "npm/node_modules/@aliou/pi-guardrails/package.json"));
-const { parse } = require("@aliou/sh") as {
-	parse(command: string): { ast: unknown; errors?: unknown[] };
-};
+import type { Statement, Word, WordPart } from "@aliou/sh";
+import { isToolCallEventType, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
-type Decision = "none" | "read" | "confirm" | "secret";
-const CLOUD = new Set(["aws", "gcloud", "kubectl"]);
-const CLOUD_TEXT = /\b(?:aws|gcloud|kubectl)\b/;
+import { parseShell, type PackagePolicy } from "./package-policy.ts";
+
+const SHELLS = new Set(["bash", "sh", "zsh"]);
+const COMMAND_WRAPPERS = new Set(["env", "command", "exec"]);
+const OPAQUE_WRAPPERS = new Set([...COMMAND_WRAPPERS, ...SHELLS, "eval", "xargs"]);
 const VALUE_OPTIONS = new Set([
-	"--profile", "--region", "--output", "-o", "--query", "--endpoint-url",
-	"--cli-connect-timeout", "--cli-read-timeout", "--ca-bundle",
-	"--project", "--account", "--configuration", "--billing-project",
-	"--impersonate-service-account", "--format", "--verbosity",
-	"--context", "--namespace", "-n", "--cluster", "--user", "--server",
-	"--request-timeout", "--as", "--as-group", "--kubeconfig", "--zone",
-	"--filter", "--limit", "--sort-by", "--page-size", "--max-items", "--starting-token",
+  "--profile",
+  "--region",
+  "--output",
+  "-o",
+  "--query",
+  "--endpoint-url",
+  "--cli-connect-timeout",
+  "--cli-read-timeout",
+  "--ca-bundle",
+  "--project",
+  "--account",
+  "--configuration",
+  "--billing-project",
+  "--impersonate-service-account",
+  "--format",
+  "--verbosity",
+  "--context",
+  "--namespace",
+  "-n",
+  "--cluster",
+  "--user",
+  "--server",
+  "--request-timeout",
+  "--as",
+  "--as-group",
+  "--kubeconfig",
+  "--zone",
+  "--filter",
+  "--limit",
+  "--sort-by",
+  "--page-size",
+  "--max-items",
+  "--starting-token",
 ]);
 const BOOLEAN_OPTIONS = new Set([
-	"--no-cli-pager", "--no-paginate", "--debug", "--quiet", "--all-namespaces", "-A",
-	"--show-labels", "--no-headers", "--help", "-h", "--version",
+  "--no-cli-pager",
+  "--no-paginate",
+  "--debug",
+  "--quiet",
+  "--all-namespaces",
+  "-A",
+  "--show-labels",
+  "--no-headers",
+  "--help",
+  "-h",
+  "--version",
 ]);
 const GCLOUD_GROUPS = new Set([
-	"projects", "auth", "compute instances", "compute disks", "compute networks",
-	"compute firewall-rules", "container clusters", "sql instances", "iam service-accounts",
-	"storage buckets", "storage objects", "run services", "functions", "config configurations",
+  "projects",
+  "auth",
+  "compute instances",
+  "compute disks",
+  "compute networks",
+  "compute firewall-rules",
+  "container clusters",
+  "sql instances",
+  "iam service-accounts",
+  "storage buckets",
+  "storage objects",
+  "run services",
+  "functions",
+  "config configurations",
 ]);
 
-function literal(node: unknown): string | undefined {
-	if (!node || typeof node !== "object") return;
-	const value = node as { type: string; value?: string; parts?: unknown[] };
-	if (value.type === "Literal" || value.type === "SglQuoted") return value.value;
-	if (value.type !== "Word" && value.type !== "DblQuoted") return;
-	const parts = (value.parts ?? []).map(literal);
-	return parts.every((part) => part !== undefined) ? parts.join("") : undefined;
+type CloudDecision = "none" | "read" | "confirm" | "secret";
+type Invocation = readonly (string | undefined)[];
+
+interface ShellAnalysis {
+  readonly cloud: CloudDecision;
+  readonly invocations: readonly string[];
 }
 
-function commands(node: unknown, result: (string | undefined)[][], normalized: string[]): void {
-	if (!node || typeof node !== "object") return;
-	const value = node as Record<string, unknown>;
-	if (value.type === "SimpleCommand") {
-		result.push(((value.words ?? []) as unknown[]).map(literal));
-	}
-	if (value.type === "Pipeline") {
-		const stages = value.commands as { command: { type: string; words?: unknown[] } }[];
-		if (stages.every((stage) => stage.command.type === "SimpleCommand")) {
-			const pipeline = stages.map((stage) => policyCommand((stage.command.words ?? []).map(literal)));
-			// Anchored rules must also see downloads after a preceding stage.
-			for (let first = 0; first < pipeline.length - 1; first++) {
-				normalized.push(pipeline.slice(first).join(" | "));
-			}
-		}
-	}
-	for (const child of Object.values(value)) {
-		if (Array.isArray(child)) child.forEach((item) => commands(item, result, normalized));
-		else if (child && typeof child === "object") commands(child, result, normalized);
-	}
+interface CloudPolicy {
+  readonly credentialPatterns: readonly RegExp[];
+  isInspection(operands: readonly string[]): boolean;
 }
 
-function operands(args: string[]): string[] | undefined {
-	const result: string[] = [];
-	for (let i = 0; i < args.length; i++) {
-		const arg = args[i];
-		if (!arg.startsWith("-")) { result.push(arg); continue; }
-		const option = arg.split("=", 1)[0];
-		if (BOOLEAN_OPTIONS.has(arg)) continue;
-		if (!VALUE_OPTIONS.has(option)) return;
-		if (!arg.includes("=")) {
-			if (args[i + 1] === undefined || args[i + 1].startsWith("-")) return;
-			i++;
-		}
-	}
-	return result;
+const cloudPolicies = new Map<string, CloudPolicy>([
+  [
+    "aws",
+    {
+      credentialPatterns: [
+        ...[
+          "get-secret-value",
+          "batch-get-secret-value",
+          "get-parameter",
+          "get-parameters",
+          "get-parameters-by-path",
+          "get-session-token",
+          "get-federation-token",
+          "assume-role",
+          "get-login-password",
+          "get-authorization-token",
+          "export-credentials",
+        ].map((operation) => new RegExp(`\\b${operation}\\b`)),
+        /\bconfigure\b[\s\S]*\bget\b[\s\S]*\baws_(?:access_key_id|secret_access_key|session_token)\b/,
+      ],
+      isInspection([service, operation]) {
+        if (service === "s3" && operation === "ls") return true;
+        if (service === "sts" && operation === "get-caller-identity") return true;
+        return operation !== undefined && /^(?:list|describe|head)-/.test(operation);
+      },
+    },
+  ],
+  [
+    "gcloud",
+    {
+      credentialPatterns: [
+        /\bprint-(?:access|identity)-token\b/,
+        /\bsecrets\b[\s\S]*\bversions\b[\s\S]*\baccess\b/,
+      ],
+      isInspection(words) {
+        for (const [index, operation] of words.entries()) {
+          if (index === 0) continue;
+          const group = words.slice(0, index).join(" ");
+          if (
+            GCLOUD_GROUPS.has(group) &&
+            ["list", "describe", "get-iam-policy"].includes(operation)
+          ) {
+            return true;
+          }
+        }
+        return false;
+      },
+    },
+  ],
+  [
+    "kubectl",
+    {
+      credentialPatterns: [
+        /(?:^|[\s,])secrets?(?:[\s,/.]|$)/i,
+        /\bconfig\b[\s\S]*\bview\b/,
+        /(?:^|\s)--raw(?:=|\s|$)/,
+      ],
+      isInspection([operation, subcommand]) {
+        if (
+          operation !== undefined &&
+          [
+            "get",
+            "describe",
+            "logs",
+            "events",
+            "api-resources",
+            "api-versions",
+            "version",
+            "top",
+            "explain",
+          ].includes(operation)
+        ) {
+          return true;
+        }
+        return (
+          operation === "config" &&
+          subcommand !== undefined &&
+          ["current-context", "get-contexts", "get-clusters", "get-users"].includes(subcommand)
+        );
+      },
+    },
+  ],
+]);
+const CLOUD_TEXT = new RegExp(`\\b(?:${[...cloudPolicies.keys()].join("|")})\\b`);
+
+export function registerCommandGuards(
+  pi: ExtensionAPI,
+  isYolo: () => boolean,
+  policy: PackagePolicy,
+): void {
+  pi.on("tool_call", async (event, ctx) => {
+    if (!isToolCallEventType("bash", event)) return;
+
+    const command = event.input.command;
+    const analysis = analyzeShell(command);
+    if (analysis.cloud === "secret") {
+      return {
+        block: true,
+        reason:
+          "Cloud credential output is blocked, including in YOLO mode. Run the authenticated operation without exposing credentials.",
+      };
+    }
+
+    const decision = await policy.commandDecision(command, analysis.invocations);
+    if (decision?.kind === "upstream-denial") return;
+    if (decision?.kind === "deny") {
+      return {
+        block: true,
+        reason: decision.reason,
+        ...(decision.terminate ? { terminate: true } : {}),
+      };
+    }
+    if (decision?.kind === "confirm") {
+      if (
+        !ctx.hasUI ||
+        !(await ctx.ui.confirm(`Allow guarded command: ${decision.reason}?`, command))
+      ) {
+        return { block: true, reason: "Guarded command was not approved." };
+      }
+    }
+
+    if (analysis.cloud !== "confirm" || isYolo()) return;
+    if (!ctx.hasUI) {
+      return {
+        block: true,
+        reason: "Cloud mutation or unrecognized operation requires interactive confirmation.",
+      };
+    }
+    if (!(await ctx.ui.confirm("Allow cloud mutation or unrecognized operation?", command))) {
+      return { block: true, reason: "Cloud command was not approved." };
+    }
+  });
 }
 
-function unwrap(call: (string | undefined)[]): (string | undefined)[] {
-	while (call[0] && ["env", "command", "exec"].includes(basename(call[0]))) {
-		const wrapper = basename(call[0]);
-		let index = 1;
-		while (index < call.length) {
-			const word = call[index];
-			if (word === undefined) return call;
-			if (word === "--") { index++; break; }
-			if (wrapper === "env" && /^[A-Za-z_][\w]*=/.test(word)) { index++; continue; }
-			if (["-i", "--ignore-environment", "-p"].includes(word)) { index++; continue; }
-			if (["-u", "--unset", "-C", "--chdir", "-a"].includes(word)) { index += 2; continue; }
-			if (wrapper === "env" && /^(?:--(?:unset|chdir)=|-[uC].)/.test(word)) { index++; continue; }
-			if (word.startsWith("-")) return call;
-			break;
-		}
-		call = call.slice(index);
-	}
-	return call;
+function classifyCloudCommand(cli: string, args: readonly string[]): CloudDecision {
+  const policy = cloudPolicies.get(cli);
+  if (!policy) return "none";
+
+  // Credential output stays blocked even when an unknown option prevents classification.
+  const text = args.join(" ");
+  if (policy.credentialPatterns.some((pattern) => pattern.test(text))) return "secret";
+
+  const operands = commandOperands(args);
+  if (!operands) return "confirm";
+  return policy.isInspection(operands) ? "read" : "confirm";
 }
 
-function classify(cli: string, args: string[]): Decision {
-	// Secret-returning operations are denied even if an unrelated option is
-	// unknown. Inspection names alone do not prove the output is non-secret.
-	const text = args.join(" ");
-	if (cli === "aws" && (
-		/\b(?:get-secret-value|batch-get-secret-value|get-parameter|get-parameters|get-parameters-by-path|get-session-token|get-federation-token|assume-role(?:-with-web-identity|-with-saml)?|get-login-password|get-authorization-token|export-credentials)\b/.test(text) ||
-		/\bconfigure\b[\s\S]*\bget\b[\s\S]*\baws_(?:access_key_id|secret_access_key|session_token)\b/.test(text)
-	)) return "secret";
-	if (cli === "gcloud" && (
-		/\bprint-(?:access|identity)-token\b/.test(text) || /\bsecrets\b[\s\S]*\bversions\b[\s\S]*\baccess\b/.test(text)
-	)) return "secret";
-	if (cli === "kubectl" && (
-		/(?:^|[\s,])secrets?(?:[\s,/.]|$)/i.test(text) || /\bconfig\b[\s\S]*\bview\b/.test(text) || /(?:^|\s)--raw(?:=|\s|$)/.test(text)
-	)) return "secret";
-	const words = operands(args);
-	if (!words) return "confirm";
-	if (cli === "aws") {
-		const [service, operation] = words;
-		if (service === "s3" && operation === "ls") return "read";
-		if (service === "sts" && operation === "get-caller-identity") return "read";
-		if (operation && /^(?:list|describe|head)-/.test(operation)) return "read";
-		return "confirm";
-	}
-	if (cli === "gcloud") {
-		for (let i = 1; i < words.length; i++) {
-			if (GCLOUD_GROUPS.has(words.slice(0, i).join(" ")) &&
-				["list", "describe", "get-iam-policy"].includes(words[i])) return "read";
-		}
-		return "confirm";
-	}
-	if (["get", "describe", "logs", "events", "api-resources", "api-versions", "version", "top", "explain"].includes(words[0])) return "read";
-	if (words[0] === "config" && ["current-context", "get-contexts", "get-clusters", "get-users"].includes(words[1])) return "read";
-	return "confirm";
+function commandOperands(args: readonly string[]): string[] | undefined {
+  const operands: string[] = [];
+  const words = args.values();
+  for (const arg of words) {
+    if (!arg.startsWith("-")) {
+      operands.push(arg);
+      continue;
+    }
+    if (BOOLEAN_OPTIONS.has(arg)) continue;
+
+    const separator = arg.indexOf("=");
+    const option = separator < 0 ? arg : arg.slice(0, separator);
+    if (!VALUE_OPTIONS.has(option)) return;
+    if (separator >= 0) continue;
+
+    const value = words.next().value;
+    if (value === undefined || value.startsWith("-")) return;
+  }
+  return operands;
 }
 
-function shellCommand(call: (string | undefined)[]): string | undefined {
-	for (let i = 1; i < call.length; i++) {
-		const option = call[i];
-		if (!option || option === "--" || !/^[-+]/.test(option)) return;
-		if (["-o", "+o", "-O", "+O", "--rcfile", "--init-file"].includes(option)) { i++; continue; }
-		if (/^-[a-z]*c[a-z]*$/i.test(option)) return call[i + 1];
-	}
+function analyzeShell(command: string): ShellAnalysis {
+  const calls: Invocation[] = [];
+  const invocations: string[] = [];
+  const fallback: ShellAnalysis = {
+    cloud: CLOUD_TEXT.test(command) ? "confirm" : "none",
+    invocations,
+  };
+  try {
+    const parsed = parseShell(command);
+    if (parsed.errors?.length) return fallback;
+    collectShellCalls(parsed.ast, calls, invocations);
+  } catch {
+    return fallback;
+  }
+
+  let cloud: CloudDecision = "none";
+  for (const original of calls) {
+    const call = unwrapCommand(original);
+    const cli = call[0] && basename(call[0]);
+    invocations.push(policyCommand(call));
+
+    const script = cli && SHELLS.has(cli) ? shellScript(call) : undefined;
+    if (script) {
+      const nested = analyzeShell(script);
+      invocations.push(...nested.invocations);
+      if (nested.cloud === "secret") return { cloud: "secret", invocations };
+      if (nested.cloud !== "none") cloud = "confirm";
+    }
+
+    if (!cli || !cloudPolicies.has(cli)) {
+      // A wrapper's cloud-related arguments do not prove what it executes.
+      if (
+        cli &&
+        OPAQUE_WRAPPERS.has(cli) &&
+        call.some((word) => word !== undefined && CLOUD_TEXT.test(word))
+      ) {
+        cloud = "confirm";
+      }
+      continue;
+    }
+
+    const decision = classifyCloudCommand(
+      cli,
+      call.slice(1).map((word) => word ?? "<unresolved>"),
+    );
+    if (decision === "secret") return { cloud: "secret", invocations };
+    if (call.some((word) => word === undefined)) {
+      cloud = "confirm";
+      continue;
+    }
+    if (decision === "confirm" || cloud === "none") cloud = decision;
+  }
+  return { cloud, invocations };
+}
+
+function literalWord(node: Word | WordPart): string | undefined {
+  switch (node.type) {
+    case "Literal":
+    case "SglQuoted":
+      return node.value;
+    case "Word":
+    case "DblQuoted": {
+      const parts = node.parts.map(literalWord);
+      return parts.every((part) => part !== undefined) ? parts.join("") : undefined;
+    }
+    default:
+      return undefined;
+  }
+}
+
+function collectShellCalls(node: object, calls: Invocation[], invocations: string[]): void {
+  // The parser owns these node shapes. Traversal also visits positions and other metadata.
+  const value = node as { type?: string; words?: Word[]; commands?: Statement[] };
+  if (value.type === "SimpleCommand") calls.push((value.words ?? []).map(literalWord));
+  if (value.type === "Pipeline") {
+    const stages = value.commands ?? [];
+    const commands = stages
+      .map((stage) => stage.command)
+      .filter((command) => command.type === "SimpleCommand");
+    if (commands.length === stages.length) {
+      const pipeline = commands.map((command) =>
+        policyCommand((command.words ?? []).map(literalWord)),
+      );
+      // Anchored download rules must see pipelines that start after an earlier stage.
+      for (let first = 0; first < pipeline.length - 1; first++) {
+        invocations.push(pipeline.slice(first).join(" | "));
+      }
+    }
+  }
+  for (const child of Object.values(node)) {
+    if (Array.isArray(child)) {
+      for (const item of child) {
+        if (item && typeof item === "object") collectShellCalls(item, calls, invocations);
+      }
+    } else if (child && typeof child === "object") {
+      collectShellCalls(child, calls, invocations);
+    }
+  }
+}
+
+function unwrapCommand(words: Invocation): Invocation {
+  let call = words;
+  while (call[0] && COMMAND_WRAPPERS.has(basename(call[0]))) {
+    const wrapper = basename(call[0]);
+    let index = 1;
+    while (index < call.length) {
+      const word = call[index];
+      if (word === undefined) return call;
+      if (word === "--") {
+        index++;
+        break;
+      }
+      if (wrapper === "env" && /^[A-Za-z_][\w]*=/.test(word)) {
+        index++;
+        continue;
+      }
+      if (["-i", "--ignore-environment", "-p"].includes(word)) {
+        index++;
+        continue;
+      }
+      if (["-u", "--unset", "-C", "--chdir", "-a"].includes(word)) {
+        index += 2;
+        continue;
+      }
+      if (wrapper === "env" && /^(?:--(?:unset|chdir)=|-[uC].)/.test(word)) {
+        index++;
+        continue;
+      }
+      if (word.startsWith("-")) return call;
+      break;
+    }
+    call = call.slice(index);
+  }
+  return call;
+}
+
+function shellScript(call: Invocation): string | undefined {
+  for (let index = 1; index < call.length; index++) {
+    const option = call[index];
+    if (!option || option === "--" || !/^[-+]/.test(option)) return;
+    if (["-o", "+o", "-O", "+O", "--rcfile", "--init-file"].includes(option)) {
+      index++;
+      continue;
+    }
+    if (/^-[a-z]*c[a-z]*$/i.test(option)) return call[index + 1];
+  }
+}
+
+// These strings are policy inputs, never executable shell text.
+function policyCommand(words: Invocation): string {
+  const call = unwrapCommand(words);
+  const executable = call[0] ? basename(call[0]) : undefined;
+  return [executable, ...call.slice(1)].map(policyWord).join(" ");
 }
 
 function policyWord(word: string | undefined): string {
-	if (word === undefined) return "<unresolved>";
-	if (/^[\w./:=+,%@-]+$/.test(word)) return word;
-	const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
-	const option = word.match(/^(-[\w-]+=)([\s\S]*)$/);
-	return option ? option[1] + quote(option[2]) : quote(word);
-}
+  if (word === undefined) return "<unresolved>";
+  if (/^[\w./:=+,%@-]+$/.test(word)) return word;
 
-function policyCommand(words: (string | undefined)[]): string {
-	const call = unwrap(words);
-	return [call[0] ? basename(call[0]) : undefined, ...call.slice(1)].map(policyWord).join(" ");
-}
-
-function cloudDecision(command: string, normalized: string[]): Decision {
-	const calls: (string | undefined)[][] = [];
-	try {
-		const parsed = parse(command);
-		if (parsed.errors?.length) return CLOUD_TEXT.test(command) ? "confirm" : "none";
-		commands(parsed.ast, calls, normalized);
-	} catch {
-		return CLOUD_TEXT.test(command) ? "confirm" : "none";
-	}
-	let decision: Decision = "none";
-	for (const original of calls) {
-		const call = unwrap(original);
-		const cli = call[0] && basename(call[0]);
-		// These strings are only policy inputs, never executable shell text.
-		// Decoding literal words makes quoted/concatenated subcommands visible.
-		normalized.push(policyCommand(call));
-		const script = cli && ["bash", "sh", "zsh"].includes(cli) ? shellCommand(call) : undefined;
-		if (script) {
-			const nested = cloudDecision(script, normalized);
-			if (nested === "secret") return "secret";
-			if (nested !== "none") decision = "confirm";
-		}
-		if (!cli || !CLOUD.has(cli)) {
-			// Opaque wrappers may execute shell text or pass through a CLI. Do
-			// not mistake their arguments for a proven read-only invocation.
-			if (cli && ["env", "command", "exec", "bash", "sh", "zsh", "eval", "xargs"].includes(cli) &&
-				call.some((word) => word !== undefined && CLOUD_TEXT.test(word))) decision = "confirm";
-			continue;
-		}
-		const next = classify(cli, call.slice(1).map((word) => word ?? "<unresolved>"));
-		if (next === "secret") return "secret";
-		if (call.some((word) => word === undefined)) { decision = "confirm"; continue; }
-		if (next === "confirm" || decision === "none") decision = next;
-	}
-	return decision;
-}
-
-export function registerCommandGuards(pi: ExtensionAPI, isYolo: () => boolean, policy: PackagePolicy): void {
-	pi.on("tool_call", async (event, ctx) => {
-		if (!isToolCallEventType("bash", event)) return;
-		const normalized: string[] = [];
-		const decision = cloudDecision(event.input.command, normalized);
-		if (decision === "secret") {
-			return { block: true, reason: "Cloud credential output is blocked, including in YOLO mode. Run the authenticated operation without exposing credentials." };
-		}
-		const raw = await policy.commandDecision(event.input.command);
-		if (raw?.kind === "deny") return; // Preserve the package's denial events and termination behavior.
-		let confirmation: string | undefined;
-		for (const command of normalized) {
-			const safety = await policy.commandDecision(command, event.input.command, true);
-			if (safety?.kind === "deny") return { block: true, reason: safety.reason, ...(safety.terminate ? { terminate: true } : {}) };
-			if (safety?.kind === "confirm") confirmation = safety.reason;
-		}
-		// Leave commands already recognized in raw form to the package's UI
-		// and session grants. Only supplement the quoted forms it would miss.
-		if (confirmation && raw?.kind !== "confirm") {
-			if (!ctx.hasUI || !await ctx.ui.confirm(`Allow guarded command: ${confirmation}?`, event.input.command)) {
-				return { block: true, reason: "Guarded command was not approved." };
-			}
-		}
-		if (decision !== "confirm" || isYolo()) return;
-		if (!ctx.hasUI) return { block: true, reason: "Cloud mutation or unrecognized operation requires interactive confirmation." };
-		const approved = await ctx.ui.confirm("Allow cloud mutation or unrecognized operation?", event.input.command);
-		if (!approved) return { block: true, reason: "Cloud command was not approved." };
-	});
+  const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
+  const option = word.match(/^-[\w-]+=/)?.[0];
+  return option ? option + quote(word.slice(option.length)) : quote(word);
 }

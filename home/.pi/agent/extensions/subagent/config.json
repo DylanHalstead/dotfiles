@@ -1,0 +1,33 @@
+{
+  "toolActivation": "auto",
+  "toolDescriptionMode": "compact",
+  "enableSlashCommands": false,
+  "asyncByDefault": false,
+  "autoResume": false,
+  "defaultSubagentContext": "fresh",
+  "maxSubagentDepth": 1,
+  "maxSubagentSpawnsPerSession": 4,
+  "maxSubagentSpawnsPerRun": 3,
+  "globalConcurrencyLimit": 3,
+  "maxActiveAsyncRunsPerSession": 1,
+  "timeoutMs": 600000,
+  "scheduledRuns": { "enabled": false },
+  "missions": { "enabled": false },
+  "disabledFeatures": [
+    "agent-management",
+    "watchdog",
+    "panes",
+    "missions",
+    "lane-management",
+    "spawn-budget-grants",
+    "preflight",
+    "lane-metadata",
+    "gates",
+    "usage-budgets",
+    "tool-budgets",
+    "control-overrides",
+    "extension-bindings",
+    "external-machines",
+    "workflow-scripts"
+  ]
+}

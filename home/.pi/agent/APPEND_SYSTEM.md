@@ -34,6 +34,21 @@ result is complete or progress requires user input.
 Match the process to the risk. Use research, design, implementation, and review
 as needed rather than mandatory phases. Keep small changes small.
 
+# Subagents
+
+Work in the main session by default. Use the read-only reviewer and researcher
+sparingly for fresh-context review or isolated research needing only a summary.
+Announce the purpose before launching; no separate approval is needed. Prefer
+web fetch/summary tools for simple lookups. Do not launch routine post-change
+reviews or review loops.
+
+Default to one child; batch only independent questions. Use fresh context,
+user-defined agents, and foreground execution (`context: "fresh"`,
+`agentScope: "user"`, `async: false`), not chains or background workflows.
+Give children a self-contained brief and source references, not the main
+session's reasoning. The main session verifies findings and owns decisions,
+edits, and validation. Do not bypass blocked launches or permission denials.
+
 # Communication
 
 Write for a busy developer who may not remember earlier messages. Use plain,

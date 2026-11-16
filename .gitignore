@@ -28,6 +28,7 @@ home/.pi/agent/bin/
 home/.pi/agent/npm/
 home/.pi/agent/sandbox/projects.json
 home/.pi/agent/extensions/*/config.json
+!home/.pi/agent/extensions/subagent/config.json
 home/.pi/agent/extensions/*/logs/
 home/.pi/web-search.json
 home/.pi/config/

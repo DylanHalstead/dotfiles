@@ -3,19 +3,15 @@
 Personal shell and development configuration managed with [GNU Stow](https://www.gnu.org/software/stow/).
 The `home/` directory mirrors `$HOME`.
 
-## What's here
-
-- Shell: Zsh, Oh My Zsh, Bash, Powerlevel10k, and fzf.
-- Development: Git, GitHub CLI, mise, [Neovim](home/.config/nvim/README.md), and tmux.
-- Terminals: Ghostty, a shared [Dracula palette](home/.config/alacritty/dracula.toml), and terminal clipboard settings.
-- [Pi](home/.pi/README.md): shared settings, prompts, extensions, and separate work/personal accounts.
-- [Agent skills](https://github.com/DylanHalstead/skills): `skills-lock.json` tracks skills installed at `~/.agents/skills/`.
+See [Pi](home/.pi/README.md) for accounts and prompt workflows,
+[Neovim](home/.config/nvim/README.md) for editor setup, and
+[agent skills](https://github.com/DylanHalstead/skills) for reusable agent guidance.
 
 ## Install
 
-Install Oh My Zsh with the theme and plugins listed in `.zshrc`, mise,
-fzf 0.48+, tmux 3.2+, and Neovim 0.11+ on PATH. Configure GitHub SSH access:
-`.gitconfig` rewrites GitHub HTTPS URLs to SSH.
+Install Oh My Zsh with the theme and plugins in [`home/.zshrc`](home/.zshrc),
+mise, fzf 0.48+, and tmux 3.2+. Check the Neovim prerequisites linked above.
+Configure GitHub SSH access; `.gitconfig` rewrites GitHub HTTPS URLs to SSH.
 
 ```sh
 git clone git@github.com:DylanHalstead/dotfiles.git ~/dotfiles
@@ -25,26 +21,24 @@ mise install
 mise reshim
 ```
 
-Execute bootstrap rather than sourcing it. `./bootstrap.sh --dry-run` previews
-Stow links without installing or changing configuration. Bootstrap stops on
-errors, but skips skills and Pi packages when their CLIs are missing. Install
-those prerequisites and rerun.
+`./bootstrap.sh --dry-run` previews Stow links without changing configuration.
+Bootstrap skips skill restoration without `npx` and Pi packages without `pi`;
+install the missing CLI and rerun.
 
 In tmux, press `prefix + I` to install plugins. Neovim installs plugins on first launch.
 
 ## Maintenance
 
 - Run `stow -R -t "$HOME" home` to refresh links.
-- Keep OS tools with the platform package manager, development runtimes with mise,
-  and project dependencies in project manifests. Prefer `pnpm add -g` for global
-  Node applications so they stay outside a versioned Node installation.
-- Shared toolchains live in [`config.toml`](home/.config/mise/config.toml).
-  After changing versions, run `mise install && mise reshim` and open a new shell.
-  Projects own their version requirements.
+- Use the platform package manager for OS tools, mise for runtimes, and
+  `pnpm add -g` for global Node applications outside versioned Node installations.
+  Projects own their dependencies and runtime requirements.
+- Shared runtime defaults live in [`config.toml`](home/.config/mise/config.toml).
+  After changing them, run `mise install && mise reshim` and open a new shell.
 - Work-only tools live in [`config.work.toml`](home/.config/mise/config.work.toml).
   Use `mise -E work install` and `MISE_ENV=work zsh -l` when needed.
-- Manage skills from this repository without `--global`; `skills-lock.json` is
-  the portable source of truth.
+- Manage skills from this repository without `--global`. `skills-lock.json`
+  tracks the skills restored to `~/.agents/skills/`.
 - In work repositories, override the personal Git identity with
   `git config --local user.email you@work.com`.
 

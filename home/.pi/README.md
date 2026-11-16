@@ -1,60 +1,39 @@
-# Pi configuration
+# Pi
 
-Shared Pi configuration for the work and personal accounts. See the
-[repository README](../../README.md) for installation.
+## Accounts
 
-## Layout
+`pi` uses the work account; `pi -p personal` uses the personal account. Set
+`PI_PROFILE` to change the default. Accounts have separate credentials and share
+settings, prompts, skills, and extensions.
 
-| Path | Purpose |
-| --- | --- |
-| `agent/APPEND_SYSTEM.md` | Default behavior, tool use, and response style |
-| `agent/AGENTS.md` | Engineering standards |
-| `agent/settings.json` | Shared settings and installed packages |
-| `agent/extensions/` | Local runtime extensions and package configuration |
-| `agent/agents/` | Subagent roles, tools, and child extensions |
-| `agent/prompts/` | Optional workflow templates, such as `/design` and `/review` |
-| `model-scopes.json` | Models available to each account profile |
-| `profiles.sh` | Profile selection and shared-resource links |
+After [installation](../../README.md#install), run `pi -p personal` and `/login`
+to connect the personal account. `pi-profile personal` refreshes its shared
+links without replacing credentials or real directories. Account selection does
+not change the mise environment.
 
-## Profiles
+## Prompt workflow
 
-Run `pi` for the work account or `pi -p personal` for the personal account.
-Set `PI_PROFILE` to change the shell default. Each profile keeps its own
-`auth.json`; settings, local extensions, and installed packages link to the
-shared `agent/` resources.
+Use `/spec` to work through a problem and agree on behavior, scope, and acceptance
+criteria. Research and design happen in that discussion. It stops before
+execution planning unless you ask to continue. Save the spec only when useful
+for approval or a handoff.
 
-Use `pi-profile personal` to create or refresh that profile, then start
-`pi -p personal` and run `/login`. Profile synchronization refuses to replace
-real resource directories; move conflicting directories aside before retrying.
-Pi account selection does not select a mise environment.
+`/plan` turns the agreed result into atomic, verifiable steps. `/implement`
+executes those steps and checks the result against the requirements. Both also
+accept a scoped request; `/implement` can work directly from a spec.
 
-## Extensions and skills
+- `/brainstorm` investigates alternatives when you want a research pass.
+- `/review` checks code and reports findings without editing it.
+- `/refactor` changes code structure while preserving behavior.
 
-[Local guardrails](agent/extensions/local-guardrails/README.md) add path grants,
-YOLO controls, and command checks to the pinned `@aliou/pi-guardrails` package.
-Its README covers usage and limitations.
+These commands are optional. A clear request to build or fix something can go
+straight to implementation. Ask for a spec or plan when you want to review it
+before proceeding.
 
-`pi-subagents` provides read-only review and bounded research. Its
-[agent definitions](agent/agents/) own tools and child extensions;
-[runtime config](agent/extensions/subagent/config.json) uses the package's required
-path. Restrictions depend on trusted agent/project configuration, not a sandbox.
+Saved specs default to `.pi/spec/<slug>.md`; plans use `.pi/plan/<slug>.md` and
+carry execution progress. The spec owns requirements and decisions; the plan
+links to it without repeating them. Reuse the slug across artifacts.
 
-Inline skills and the model switch guard come from the
-[pi-extensions](https://github.com/DylanHalstead/pi-extensions) packages in
-`agent/settings.json`. Keep the model switch guard before inline skills so
-cancelling a model switch restores the original input.
-
-Skills install at `~/.agents/skills/` from the repository's `skills-lock.json`.
-`$skill-name` inserts a file reference; `/skill:name` loads a skill explicitly.
-Keep project-specific instructions in the project's own `AGENTS.md`.
-
-## Reload and clipboard
-
-Run `/reload` after changing settings, extensions, skills, or prompts.
-Restart Pi after changing shell environment variables or
-`agent/extensions/subagent/config.json`.
-
-On WSL, Pi uses the terminal's OSC 52 support for clipboard writes. The terminal
-must permit them; set `PI_CLIPBOARD_OSC52=0` to disable Pi's additional clipboard
-write. OSC 52 does not provide clipboard reads or image paste. Tmux clipboard
-settings live in [`tmux.conf`](../.config/tmux/tmux.conf).
+See the [prompt templates](agent/prompts/) for arguments and saving options,
+and [local guardrails](agent/extensions/local-guardrails/README.md) for path
+permissions and YOLO controls.

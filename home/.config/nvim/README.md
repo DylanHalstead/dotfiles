@@ -1,17 +1,11 @@
-# Personal Neovim config
+# Neovim
 
+Personal configuration based on [NvChad](https://github.com/NvChad/NvChad).
 Requires Neovim 0.12+ and `tree-sitter-cli` (`brew install tree-sitter-cli` on macOS).
-After plugins install, run `:MasonInstallAll` for editor tools and `:TSInstallAll`
-for parsers.
 
-## NvChad starter notes
+Open `nvim` to install plugins, then run:
 
-**This repo is supposed to be used as config by NvChad users!**
+- `:MasonInstallAll` for editor tools.
+- `:TSInstallAll` for parsers.
 
-- The main nvchad repo (NvChad/NvChad) is used as a plugin by this repo.
-- So you just import its modules , like `require "nvchad.options" , require "nvchad.mappings"`
-- So you can delete the .git from this repo ( when you clone it locally ) or fork it :)
-
-# Credits
-
-1) Lazyvim starter https://github.com/LazyVim/starter as nvchad's starter was inspired by Lazyvim's . It made a lot of things easier!
+The NvChad starter was inspired by [LazyVim's starter](https://github.com/LazyVim/starter).

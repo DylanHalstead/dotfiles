@@ -1,9 +1,9 @@
 ---
-description: Implement an approved plan or a scoped request
-argument-hint: "<plan-file-or-request>"
+description: Implement an approved plan, spec, or scoped request
+argument-hint: "<plan-or-spec-file-or-request>"
 ---
-Implement either an approved plan or a well-scoped request. The supplied scope
-is the contract: deliver exactly what it specifies.
+Implement the supplied plan, spec, or scoped request. The supplied scope is the
+contract: deliver exactly what it specifies.
 
 <scope>
 ${@:-(No scope was passed. Use the task the user described earlier in this conversation. If none exists, ask what to implement.)}
@@ -11,15 +11,13 @@ ${@:-(No scope was passed. Use the task the user described earlier in this conve
 
 First, decide which mode applies:
 
-- **Plan mode:** The scope is a path to an existing plan file. Read the plan in
-  full before doing anything else, including steps you will not reach today.
-  Execute its unchecked steps as described below.
-- **Direct mode:** The scope is a request, not a plan file. Do not require,
-  create, or update a plan. Treat the request as the implementation contract.
-  Read the affected code and its callers, implement the smallest complete
-  change, verify it, and commit it in atomic commits. If the request is not
-  sufficiently scoped to implement safely, ask the user the specific question
-  that blocks you.
+- **Plan mode:** Read the supplied plan in full and its linked spec, including
+  steps you will not reach today. The spec owns intended behavior; the plan
+  owns execution. Resolve material conflicts with the user before editing.
+  Execute unchecked steps as described below.
+- **Direct mode:** Read the supplied request or spec file and the affected code
+  and callers. Implement the smallest complete change without requiring or
+  creating a plan. Ask about consequential gaps before building.
 
 Then read `~/.agents/skills/engineering-standard/SKILL.md` in full. Follow
 its routing instructions to load the companion and repository skills relevant
@@ -52,25 +50,17 @@ In plan mode, for each unchecked step, in order:
    leaving it out of the commit. Progress lives on disk, so the work survives
    a new session.
 
-In direct mode, do not create a plan or progress artifact. Commit each atomic,
-reversible implementation intent with a subject-only, imperative subject of 50
-characters or fewer. Stage files by path; never use `git add -A` or `git add .`.
+In direct mode, commit each atomic, reversible intent with a subject-only, imperative
+subject of 50 characters or fewer. Stage files by path. Do not create a progress
+artifact.
 
 ## When reality contradicts the scope
 
-In plan mode, stop at the end of the current step when reality would change
-approved behavior, scope, architecture, dependencies, risk, or atomic commit
-boundaries. Do not improvise around a broken step or silently redesign.
-Specifically, stop when:
-
-- a Verify fails and the fix is not obviously inside the step's scope
-- the code invalidates a material assumption behind the planned design
-- a step turns out to need a product or technical decision the plan did not make
-
-In direct mode, stop before a change that would exceed the request or needs a
-product or technical decision the request did not make. Report what you found,
-what you would do about it, and what is already committed. The user decides
-whether to clarify the request or continue.
+Stop before changing agreed behavior, scope, architecture, dependencies, risk,
+or planned commit boundaries. This includes failed verification whose fix falls
+outside scope and material assumptions invalidated by the code. Report the
+conflict, your proposed response, and work already committed; ask for a decision
+instead of silently redesigning.
 
 ## Standing rules
 
@@ -90,8 +80,8 @@ whether to clarify the request or continue.
 ## Finishing
 
 In plan mode, when the last step is checked, run the plan's **End-to-end
-verification** and report what it showed. A plan whose steps all passed but
-whose feature does not work is not done.
+verification** and report what it showed. Check any source spec's acceptance
+criteria as well as the completed steps.
 
 In direct mode, run the most relevant available verification after the complete
 change and report what it showed.
@@ -103,15 +93,7 @@ does not prove runtime behavior, and backend checks do not prove rendered UI.
 
 ## Closing report
 
-In plan mode, the plan file carries the progress; your reply carries everything
-it cannot. In direct mode, your reply is the only progress record. End with:
-
-- what you implemented and committed, with subjects
-- which plan steps remain and what blocks each, if in plan mode
-- where the code did not match the supplied scope, and what you did about it
-- what you verified, including end-to-end verification in plan mode, and what
-  you could not verify
-- anything found and deliberately left alone, why it was excluded, and the
-  next action if one is warranted
-
-Lead with failures and blockers if there are any.
+Lead with failures or blockers. Summarize changes and commits, remaining plan
+steps, verification results and gaps, and any deviations or relevant work left
+out of scope. The plan file carries task progress; do not duplicate it in a
+separate artifact.

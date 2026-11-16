@@ -1,6 +1,6 @@
 ---
-description: Turn an agreed design or scoped request into atomic execution steps
-argument-hint: "<design-file-or-request>"
+description: Turn an agreed spec or scoped request into atomic execution steps
+argument-hint: "<spec-file-or-request>"
 ---
 Produce the smallest execution map a fresh engineer can follow using only the
 plan and repository. The source owns behavior and rationale; the plan owns
@@ -10,37 +10,27 @@ sequencing, dependencies, affected surfaces, and verification.
 ${@:-(Nothing was passed. Use the task the user described earlier in this conversation. If nothing has been described, ask what to plan before proceeding.)}
 </request>
 
-If the request above is a file path, read that file first and treat it as the
-`<context>` for this plan.
+If the request is a file path, read it first, including any linked spec that
+owns its requirements.
 
 ## Discipline
 
-This is a planning pass. Produce no changes of any kind. Specifically, do not:
-
-- write or edit any source file
-- run shell redirects (`>`, `>>`, `tee`) or heredocs that create files
-- create temp files, scratch files, or scaffolding "to test an idea"
-- run migrations, installs, generators, or formatters
-- commit, stage, or stash anything
-
-The only file you write is the plan artifact described under Output. Read,
-search, and run read-only commands freely.
+Use read-only commands. Write only the plan artifact described under Output;
+do not edit source, create scratch files, install dependencies, run generators,
+migrations, or formatters, or change Git state.
 
 ## Process
 
 1. Read `~/.agents/skills/engineering-standard/SKILL.md` in full. Follow its
    routing instructions to load the companion and repository skills relevant
    to this task.
-2. Understand the requirements. Ask clarifying questions before planning if
-   the request is ambiguous. Ask at any point in the process, not only at the
-   start; a wrong assumption is cheaper to fix now than in the executor's
-   session.
-3. Explore: read the affected files, trace the code paths the change touches,
-   and inspect enough comparable code to establish the local conventions.
-4. If material design choices remain unresolved, investigate and discuss them
-   with the user before writing the plan. Otherwise, plan directly from the
-   agreed design or sufficiently scoped request. Do not require a separate
-   design session.
+2. Establish the intended behavior, scope, and acceptance criteria. Resolve
+   consequential gaps or conflicts with the user before writing the plan;
+   do not silently change settled requirements.
+3. Read the affected files, trace the code paths, and inspect comparable code
+   to establish local conventions and check feasibility.
+4. Resolve remaining implementation choices. A sufficiently scoped request
+   needs no separate spec session or artifact.
 5. Decompose into steps. Prefer narrow vertical slices that leave the repository
    coherent over separate layer-by-layer tasks. For a wide migration that
    cannot land as vertical slices, use expand-contract: add the new form,
@@ -54,15 +44,14 @@ mood, ≤50 characters, no "and". A step whose subject needs "and" is two steps.
 ## Output
 
 Write the plan to `.pi/plan/<slug>.md` (create the directory if needed), where
-`<slug>` is a short kebab-case name. When planning from an existing design or
-brainstorm artifact, reuse its slug if it has one. Structure it exactly like
-this:
+`<slug>` is a short kebab-case name. Reuse the source artifact's slug or filename
+stem when available. Use this structure, omitting empty optional sections:
 
 ```markdown
 ---
 phase: plan
 slug: <slug>
-source: <design or brainstorm artifact path, or "none">
+source: <source artifact path, or "none">
 date: <YYYY-MM-DD>
 skills: <repo skills you loaded, or "none">
 ---
@@ -72,12 +61,12 @@ skills: <repo skills you loaded, or "none">
 ## Context & goal
 One paragraph: what we are building and why. State the approach in one
 sentence so the executor never has to infer it. Link to source requirements
-instead of restating them when a source artifact exists.
+instead of restating them when a source artifact exists. Otherwise, include
+the agreed behavior and acceptance criteria so the plan stands alone.
 
-## Chosen design
-The design and its material constraints. For each material choice, include the
-closest viable alternative and why it lost, or the evidence that eliminated
-other approaches.
+## Implementation decisions
+Only decisions needed to execute the work that the source does not already
+settle, with their rationale and main trade-off. Omit when there are none.
 
 ## Steps
 - [ ] **1.** <what this step accomplishes>
@@ -117,5 +106,5 @@ Assumptions you could not confirm, and what would confirm them.
 The plan is handed to a fresh session, so it must stand alone: no "as
 discussed above", no references to this conversation.
 
-Close your reply with the artifact path, the step count, and the single
-riskiest step — not "Done."
+Summarize the plan for approval with its path, step count, and any material risk.
+Do not begin implementation unless requested.

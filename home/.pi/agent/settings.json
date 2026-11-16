@@ -18,7 +18,8 @@
     "npm:pi-web-access",
     "npm:@dylanhalstead/pi-model-switch-guard",
     "npm:@dylanhalstead/pi-inline-skills",
-    "npm:@aliou/pi-guardrails@0.23.0"
+    "npm:@aliou/pi-guardrails@0.23.0",
+    "npm:@juicesharp/rpiv-ask-user-question"
   ],
   "defaultProvider": "openai",
   "defaultModel": "gpt-6.1-terra",

@@ -1,88 +1,53 @@
 # Pi configuration
 
-This directory contains shared Pi configuration. Account profiles keep their
-credentials and model scopes separate. The repository root `README.md` owns
-installation and profile usage.
+Shared Pi configuration for the work and personal accounts. See the
+[repository README](../../README.md) for installation.
 
 ## Layout
 
-```text
-.pi/
-├── agent/
-│   ├── APPEND_SYSTEM.md     stable behavior, tool use, and output style
-│   ├── AGENTS.md            personal engineering standards
-│   ├── extensions/          runtime behavior and guardrails.json policy
-│   ├── prompts/             user-invoked workflows
-│   └── settings.json        shared Pi settings, packages, and extensions
-├── model-scopes.json        profile-specific Pi enabledModels scopes
-└── profiles.sh              account selection and profile synchronization
-```
+| Path | Purpose |
+| --- | --- |
+| `agent/APPEND_SYSTEM.md` | Default behavior, tool use, and response style |
+| `agent/AGENTS.md` | Engineering standards |
+| `agent/settings.json` | Shared settings and installed packages |
+| `agent/extensions/` | Local runtime extensions and `guardrails.json` policy |
+| `agent/prompts/` | Optional workflow templates, such as `/design` and `/review` |
+| `model-scopes.json` | Models available to each account profile |
+| `profiles.sh` | Profile selection and shared-resource links |
 
-`profiles.sh` selects the private `auth.json` for each profile and links every
-other resource to `agent/`. It reads `model-scopes.json` and passes the selected
-profile's `enabledModels` list to Pi through `--models`. Keep profile-specific
-billing and availability policy in `model-scopes.json`; keep all shared workflow
-settings and package declarations in `agent/settings.json`.
+## Profiles
 
-Synchronization rejects real resource directories in a profile instead of merging
-links into them. Move those directories aside explicitly before retrying.
+Run `pi` for the work account or `pi -p personal` for the personal account.
+Set `PI_PROFILE` to change the shell default. Each profile keeps its own
+`auth.json`; settings, local extensions, and installed packages link to the
+shared `agent/` resources.
 
-Skills are installed at `~/.agents/skills/` from the root `skills-lock.json`.
-See the repository root `README.md` for installation and maintenance.
+Use `pi-profile personal` to create or refresh that profile, then start
+`pi -p personal` and run `/login`. Profile synchronization refuses to replace
+real resource directories; move conflicting directories aside before retrying.
+Pi account selection does not select a mise environment.
 
-Repository `AGENTS.md` files own project commands, architecture, and local
-conventions. Nested files should hold rules for the code below them. Keep
-global files free of repository-specific facts.
+## Extensions and skills
 
-## Instruction policy
+[Local guardrails](agent/extensions/local-guardrails/README.md) add path grants,
+YOLO controls, and command checks to the pinned `@aliou/pi-guardrails` package.
+Its README covers usage and limitations.
 
-- Write direct, specific instructions and define observable behavior.
-- Keep stable, universal behavior in `APPEND_SYSTEM.md`; keep engineering
-  preferences in the global `AGENTS.md`.
-- Put project rules near the code they govern and resolve conflicts there.
-- Use Markdown headings for structure. Load detailed skills only when the task
-  needs them.
-- Add examples after a repeated failure shows that an instruction alone does
-  not produce the intended result.
+Inline skills and the model switch guard come from the
+[pi-extensions](https://github.com/DylanHalstead/pi-extensions) packages in
+`agent/settings.json`. Keep the model switch guard before inline skills so
+cancelling a model switch restores the original input.
 
-Instructions guide model behavior. Rules that must hold belong in permissions
-or an extension that enforces them. Tools run on the host without an OS sandbox.
+Skills install at `~/.agents/skills/` from the repository's `skills-lock.json`.
+`$skill-name` inserts a file reference; `/skill:name` loads a skill explicitly.
+Keep project-specific instructions in the project's own `AGENTS.md`.
 
-[`@aliou/pi-guardrails`](https://github.com/aliou/pi-guardrails) owns file
-protection and command approval. Shared policy lives in
-`agent/extensions/guardrails.json`. [Local guardrails](agent/extensions/local-guardrails/README.md)
-add read grants, private scratch access, YOLO controls, and cloud-command checks
-for both account profiles.
+## Reload and clipboard
 
-## Workflows
+Run `/reload` after changing settings, extensions, skills, or prompts.
+Restart Pi after changing shell environment variables.
 
-Collaboration is the default working style in `APPEND_SYSTEM.md`. Prompt
-templates are optional entry points, not a required sequence:
-
-- `/design`: work through a design in conversation; save notes only when asked.
-- `/brainstorm`: research alternatives and recommend an approach.
-- `/plan`: turn an agreed design or scoped request into execution steps.
-- `/implement`: implement a plan or a scoped request without requiring a plan.
-- `/review`: inspect changes or existing code and report findings.
-- `/refactor`: improve structure while preserving behavior.
-
-The engineering standard owns routing to companion and repository skills.
-
-Inline skills and the model switch guard are installed from the
-[`pi-extensions`](https://github.com/DylanHalstead/pi-extensions) npm packages
-declared in `agent/settings.json`. Keep the model switch guard before inline
-skills so declining a model switch restores the original shorthand text. Do not
-add local copies of these extensions; Pi would load both versions.
-
-The inline-skills extension completes `$skill-name` mentions and replaces them
-with `@/absolute/path/to/SKILL.md` references on submission. It follows Pi's
-file-completion convention, quoting paths containing whitespace or Unicode
-separators. It does not read or inject instructions; the model decides whether
-to read the referenced file. Use Pi's native `/skill:name` command at the start of a prompt
-when you want its instructions loaded explicitly.
-
-## Maintenance
-
-Keep each decision in one place and link to its owner instead of copying it.
-Remove stale or conflicting rules when behavior changes. Run `/reload` after
-editing settings, extensions, skills, prompts, themes, or context files.
+On WSL, Pi uses the terminal's OSC 52 support for clipboard writes. The terminal
+must permit them; set `PI_CLIPBOARD_OSC52=0` to disable Pi's additional clipboard
+write. OSC 52 does not provide clipboard reads or image paste. Tmux clipboard
+settings live in [`tmux.conf`](../.config/tmux/tmux.conf).

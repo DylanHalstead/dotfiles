@@ -18,7 +18,13 @@
     "npm:pi-web-access",
     "npm:@dylanhalstead/pi-model-switch-guard",
     "npm:@dylanhalstead/pi-inline-skills",
-    "npm:@aliou/pi-guardrails@0.23.0",
+    {
+      "source": "npm:@aliou/pi-guardrails@0.23.0",
+      "extensions": [
+        "-extensions/herdr/index.ts",
+        "+extensions/guardrails/index.ts"
+      ]
+    },
     "npm:@juicesharp/rpiv-ask-user-question",
     {
       "source": "npm:pi-subagents@0.88.1",

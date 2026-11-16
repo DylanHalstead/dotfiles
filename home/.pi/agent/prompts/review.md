@@ -67,10 +67,12 @@ Collect readability concerns alongside correctness candidates. Do not filter yet
 
 ## Pass 2 — verify
 
-Try to disprove each candidate before classifying it; keep the evidence. Check
-new restrictions and explanations against requirements and existing contracts,
-not just the motivating example. Consider a materially different valid case
-without inventing broader requirements or discarding useful regression coverage.
+Try to disprove each candidate before classifying it; keep the evidence. Inspect
+added comments and documentation for correction narratives and explanations that
+duplicate the code. Check that new behavior and tests follow the supported
+contract rather than an incidental review example. Consider a materially
+different valid case without inventing broader requirements or discarding
+necessary rationale and useful regression coverage.
 
 Check requirements and code quality separately; passing one does not establish
 that the other is sound. Cite the requirement or contract behind a behavioral

@@ -6,7 +6,6 @@
   "autoResume": false,
   "defaultSubagentContext": "fresh",
   "maxSubagentDepth": 1,
-  "maxSubagentSpawnsPerSession": 4,
   "maxSubagentSpawnsPerRun": 3,
   "globalConcurrencyLimit": 3,
   "maxActiveAsyncRunsPerSession": 1,
